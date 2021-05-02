@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/color_bg_launch"
+    tools:context=".LauncherActivity">
+<Button
+    android:id="@+id/launcher_btn_exit"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+    android:padding="5dp"
+    android:text="点击跳过"
+    android:textColor="@color/yellow"
+    android:background="@color/transparent"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical">
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginBottom="50dp"
+        android:src="@mipmap/logo_min"/>
+    <TextView
+        android:id="@+id/launcher_txt_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textSize="35sp"
+        android:textStyle="bold"
+        android:ems="1"
+        android:textColor="@color/white"
+        android:lineHeight="50dp"
+        android:text="@string/launch_title"
+        />
+
+    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="10dp"
+        android:text="@string/launch_version"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        />
+</RelativeLayout>
