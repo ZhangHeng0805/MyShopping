@@ -41,7 +41,7 @@ import com.amap.api.services.weather.WeatherSearch;
 import com.amap.api.services.weather.WeatherSearchQuery;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.zhangheng.myshopping.Main7Activity;
+import com.zhangheng.myshopping.WeatherActivity;
 import com.zhangheng.myshopping.R;
 import com.zhangheng.myshopping.adapter.GoodsList_Adapter;
 import com.zhangheng.myshopping.adapter.GoodsMeunList_Adapter;
@@ -370,7 +370,7 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                 Intent intent=new Intent();
                 if (weather_address!=null) {
                     intent.putExtra("address", weather_address);
-                    intent.setClass(getContext(), Main7Activity.class);
+                    intent.setClass(getContext(), WeatherActivity.class);
                     startActivity(intent);
                 }
             }

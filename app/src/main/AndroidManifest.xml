@@ -22,7 +22,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".Main7Activity"
+            android:name=".WeatherActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity android:name=".fragment.MyActivity.OrderActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"/>

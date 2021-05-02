@@ -29,7 +29,7 @@ import java.util.Map;
 
 import okhttp3.Call;
 
-public class Main7Activity extends Activity implements View.OnClickListener {
+public class WeatherActivity extends Activity implements View.OnClickListener {
     private EditText m7_et_city;
     private Button m7_btn_query;
     private ListView m7_list_future;
@@ -42,7 +42,7 @@ public class Main7Activity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main7);
+        setContentView(R.layout.activity_weather);
         Intent intent=getIntent();
         address=intent.getStringExtra("address");
         if (Build.VERSION.SDK_INT >= 23) {
@@ -161,20 +161,20 @@ public class Main7Activity extends Activity implements View.OnClickListener {
                             String future_text = "《" + city + "》近" + size + "天的天气";
                             //近期天气情况
                             m7_text_future_city.setText(future_text);
-                            m7_list_future.setAdapter(new WeatherList_Adapter(Main7Activity.this, jsonRootBean));
+                            m7_list_future.setAdapter(new WeatherList_Adapter(WeatherActivity.this, jsonRootBean));
                         } else {
                             switch (jsonRootBean.getError_code()) {
                                 case 207301:
-                                    Toast.makeText(Main7Activity.this, "错误的查询城市名", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(WeatherActivity.this, "错误的查询城市名", Toast.LENGTH_SHORT).show();
                                     break;
                                 case 207302:
-                                    Toast.makeText(Main7Activity.this, "查询不到该城市的相关信息", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(WeatherActivity.this, "查询不到该城市的相关信息", Toast.LENGTH_SHORT).show();
                                     break;
                                 case 207303:
-                                    Toast.makeText(Main7Activity.this, "网络错误，请重试", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(WeatherActivity.this, "网络错误，请重试", Toast.LENGTH_SHORT).show();
                                     break;
                                 default:
-                                    Toast.makeText(Main7Activity.this, "错误码：" + jsonRootBean.getError_code(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(WeatherActivity.this, "错误码：" + jsonRootBean.getError_code(), Toast.LENGTH_SHORT).show();
                                     break;
                             }
                             m7_text_realtime_city.setText("错误码：" + jsonRootBean.getError_code());

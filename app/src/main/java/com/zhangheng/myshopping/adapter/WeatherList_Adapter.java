@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.zhangheng.myshopping.Main7Activity;
+import com.zhangheng.myshopping.WeatherActivity;
 import com.zhangheng.myshopping.R;
 import com.zhangheng.myshopping.bean.weather.Future;
 import com.zhangheng.myshopping.bean.weather.JsonRootBean;
@@ -67,7 +67,7 @@ public class WeatherList_Adapter extends BaseAdapter {
         String date=df.format(future.getDate())+"天气";
         viewHolder.future_date.setText(date);
         //设置天气图标
-        Main7Activity m=new Main7Activity();
+        WeatherActivity m=new WeatherActivity();
         String day=future.getWid().getDay();
         int dayIcon = m.getDayIcon(day);
         viewHolder.img_day_icon.setImageResource(dayIcon);
