@@ -182,11 +182,11 @@ public class MyFragment extends BaseFragment {
                                             if (!versionCode.equals(appversion(resuilt.getMessage()))) {
                                                 showUpdate(resuilt.getMessage());
                                             }else {
-                                                DialogUtil.dialog(getContext(),"最新新版本："+urlname,"当前应用已经是最新版本了");
+                                                DialogUtil.dialog(getContext(),"最新版本："+resuilt.getMessage(),"当前应用已经是最新版本了");
                                             }
                                         } else {
                                             Log.d("urlname", "urlname与更新地址一致");
-                                            DialogUtil.dialog(getContext(),"忽略更新版本："+urlname,"你已经选择忽略本版本的更新");
+                                            DialogUtil.dialog(getContext(),"忽略更新版本："+urlname,"你已经选择忽略此版本的更新");
 
                                         }
                                     } else {

@@ -22,6 +22,12 @@
         android:theme="@style/AppTheme">
 
         <activity
+            android:name=".ShareLocationActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity
+            android:name="com.amap.api.maps.offlinemap.OfflineMapActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".WeatherActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity android:name=".fragment.MyActivity.OrderActivity"

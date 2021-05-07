@@ -42,7 +42,7 @@
             android:padding="8dp"
             android:textSize="18sp"
             android:background="@drawable/btn"
-            android:hint="请输入地址："
+            android:hint="请输入收货地址："
             />
         <TextView
             android:layout_width="wrap_content"

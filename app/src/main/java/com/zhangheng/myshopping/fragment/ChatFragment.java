@@ -3,6 +3,7 @@ package com.zhangheng.myshopping.fragment;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +23,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.google.gson.Gson;
 import com.zhangheng.myshopping.R;
+import com.zhangheng.myshopping.ShareLocationActivity;
 import com.zhangheng.myshopping.adapter.ChatBaseAdapter;
 import com.zhangheng.myshopping.base.BaseFragment;
 import com.zhangheng.myshopping.bean.chat.ChatConfig;
@@ -59,7 +61,7 @@ public class ChatFragment extends BaseFragment {
     private TextView main_chatfragment_txt_title;
     private ListView mListView;
     private EditText main_chatfragment_et_message;
-    private Button main_chatfragment_btn_submit;
+    private Button main_chatfragment_btn_submit,main_chatfragment_btn_sharelocation;
     private ChatBaseAdapter adapter;
     private SharedPreferences preferences;
     private String phone,name,password,address;
@@ -82,8 +84,8 @@ public class ChatFragment extends BaseFragment {
     private static Channel mChannel;
     private static ChannelFuture mFuture;
 
-    private List<ChatInfo> chatInfos=new ArrayList<>();
-    private List<ChatInfo> userChat=new ArrayList<>();
+    private List<ChatInfo> chatInfos=new ArrayList<>();//聊天消息列表
+    private List<ChatInfo> userChat=new ArrayList<>();//聊天用户列表
     @Override
     protected View initView() {
         Log.e(TAG,"聊天框架Fragment页面被初始化了");
@@ -92,6 +94,7 @@ public class ChatFragment extends BaseFragment {
         main_chatfragment_et_message=view.findViewById(R.id.main_chatfragment_et_message);
         main_chatfragment_btn_submit=view.findViewById(R.id.main_chatfragment_btn_submit);
         main_chatfragment_txt_title=view.findViewById(R.id.main_chatfragment_txt_title);
+        main_chatfragment_btn_sharelocation=view.findViewById(R.id.main_chatfragment_btn_sharelocation);
 
         mMainHandler = new Handler() {
             @Override
@@ -100,6 +103,7 @@ public class ChatFragment extends BaseFragment {
                     case MSG_CONNECT:
                         Toast.makeText(getContext(), "服务器连接成功", Toast.LENGTH_SHORT).show();
                         main_chatfragment_txt_title.setText("聊天室已连接");
+                        main_chatfragment_txt_title.setTextColor(getResources().getColor(R.color.white));
                         sendOnline();
                         break;
                     case MSG_RECEIVE:
@@ -191,14 +195,18 @@ public class ChatFragment extends BaseFragment {
             }
         };
         Listener();
-
         return view;
     }
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
         exitChat();
     }
+
     private void Listener(){
         main_chatfragment_btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -262,6 +270,42 @@ public class ChatFragment extends BaseFragment {
             public boolean onLongClick(View view) {
                 chooseChatObject();
                 return true;
+            }
+        });
+
+        main_chatfragment_btn_sharelocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (userChat.size()>0){
+                    boolean b=false;
+                    for (ChatInfo c:userChat){
+                        if (c.getFrom_name().equals(name)){
+                            b=true;
+                            break;
+                        }
+                    }
+                    if (b){
+                        DialogUtil.dialog(getContext(),"用户名重复","聊天室有用户的用户名和你的用户名相同，建议更改用户名");
+                    }else {
+                        if (name!=null) {
+                            Intent intent = new Intent();
+                            intent.putExtra("name",name);
+                            intent.setClass(getContext(), ShareLocationActivity.class);
+                            startActivity(intent);
+                        }else {
+                            DialogUtil.dialog(getContext(),"账户为空","请登录后再来操作");
+                        }
+                    }
+                }else {
+                    if (name!=null) {
+                        Intent intent = new Intent();
+                        intent.putExtra("name",name);
+                        intent.setClass(getContext(), ShareLocationActivity.class);
+                        startActivity(intent);
+                    }else {
+                        DialogUtil.dialog(getContext(),"账户为空","请登录后再来操作");
+                    }
+                }
             }
         });
     }
@@ -405,9 +449,15 @@ public class ChatFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         getPreferences();
+        if (name!=null){
+            main_chatfragment_btn_sharelocation.setVisibility(View.VISIBLE);
+        }else {
+            main_chatfragment_btn_sharelocation.setVisibility(View.GONE);
+        }
         if (mChannel!=null){
             if (mChannel.isActive()) {
                 main_chatfragment_txt_title.setText("聊天室已连接");
+                main_chatfragment_txt_title.setTextColor(getResources().getColor(R.color.white));
 
             }else {
                 if (name!=null&&phone!=null) {
