@@ -44,15 +44,16 @@
   <img src="https://user-images.githubusercontent.com/74289276/123545328-08eadb00-d78a-11eb-81d4-4b1431428601.jpg" width = "150" height = "300" alt="设置位置" align=center />
   </div>
 ---
-图1-9：订单列表界:：展示自己的所有订单信息，点击每一个订单可以查看订单的详细商品。
-图1-10：用户信息界面：用户登录后，在我的界面点击用户头像即可进入用户信息界面，用于展示用户的账户信息，可以修改用户头像、用户名、密码。
-图1-11：位置共享界面：用于彼此同时展示用户的共享位置位置信息，点击黄色文字按钮可以刷新位置信息，点击右侧的按钮可以修改定位模式和地图样式，还可以缓存地图。
+* 图1-9：订单列表界:：展示自己的所有订单信息，点击每一个订单可以查看订单的详细商品。
+* 图1-10：用户信息界面：用户登录后，在我的界面点击用户头像即可进入用户信息界面，用于展示用户的账户信息，可以修改用户头像、用户名、密码。
+* 图1-11：位置共享界面：用于彼此同时展示用户的共享位置位置信息，点击黄色文字按钮可以刷新位置信息，点击右侧的按钮可以修改定位模式和地图样式，还可以缓存地图。
 <div>
 <img src="https://user-images.githubusercontent.com/74289276/123545318-05575400-d78a-11eb-955c-c858d3738bbc.jpg" width = "150" height = "300" alt="订单列表界" align=center />
 <img src="https://user-images.githubusercontent.com/74289276/123545336-0be5cb80-d78a-11eb-889b-4ab801479c65.jpg" width = "150" height = "300" alt="用户信息界面" align=center />
 <img src="https://user-images.githubusercontent.com/74289276/123545331-0a1c0800-d78a-11eb-85c4-2cd0fddd2dc8.jpg" width = "150" height = "300" alt="位置共享界面" align=center />
 </div>
----
+
+******
 * 订单提交
 * 订单提交完成
 * 商品分类
@@ -63,12 +64,60 @@
   <img src="https://user-images.githubusercontent.com/74289276/123545327-08524480-d78a-11eb-8b72-00f4504b2fe7.jpg" width = "150" height = "300" alt="商品分类" align=center />
   <img src="https://user-images.githubusercontent.com/74289276/123545335-0b4d3500-d78a-11eb-875a-922c719d985b.jpg" width = "150" height = "300" alt="选购商品" align=center />
   </div>
----
-####（2）网页界面设计
+
+#### （2）网页界面设计
 * 图2-1：登录界面:用于商家登录的界面
 * 图2-2：注册界面:用于注册商家地界面
-<div>
-  <img src="https://user-images.githubusercontent.com/74289276/123545319-05efea80-d78a-11eb-9490-39b5f67bff8d.jpg" width = "150" height = "300" alt="订单提交" align=center />
-  <img src="https://user-images.githubusercontent.com/74289276/123545320-06888100-d78a-11eb-912c-fa1151aff1a4.jpg" width = "150" height = "300" alt="订单提交完成" align=center />
+  <div>
+  <img src="https://user-images.githubusercontent.com/74289276/123547270-b235cf00-d792-11eb-889d-2f8c6f7783c4.png" width = "350" height = "200" alt="登录界面" align=center />
+  <img src="https://user-images.githubusercontent.com/74289276/123547280-b5c95600-d792-11eb-9f86-4e1445a5d179.png" width = "200" height = "200" alt="注册界面" align=center />
   </div>
 ---
+* 图2-3：用户主页界面:用于展示商户店铺的盈利情况以及一些未处理的订单
+* 图2-4：订单列表界面:展示商铺的所有的订单信息
+ <div>
+  <img src="https://user-images.githubusercontent.com/74289276/123547279-b530bf80-d792-11eb-8345-67e9c96631cb.png" width = "350" height = "200" alt="用户主页界面" align=center />
+  <img src="https://user-images.githubusercontent.com/74289276/123547271-b366fc00-d792-11eb-9325-befad9c13ed4.png" width = "350" height = "200" alt="订单列表界面" align=center />
+  </div>
+
+---
+
+* 图2-5：添加商品界面：可以为自己的店铺添加新的商品
+* 图2-6：商品信息界面：展示商家店铺的所有商品信息，可以修改商品和删除商品
+* 图2-7：修改商品信息界面：通过商品信息界面点击对应商品的修改按钮，即可进入该商品的修改界面，可以更改商品信息。
+ <div>
+  <img src="https://user-images.githubusercontent.com/74289276/123547278-b4982900-d792-11eb-9538-23d90fa8ead1.png" width = "300" height = "150" alt="添加商品界面" align=center />
+  <img src="https://user-images.githubusercontent.com/74289276/123547274-b3ff9280-d792-11eb-86dc-181196d7d041.png" width = "300" height = "150" alt="商品信息界面" align=center />
+ <img src="https://user-images.githubusercontent.com/74289276/123547269-b06c0b80-d792-11eb-8d16-40e2c13a7d4a.png" width = "300" height = "150" alt="修改商品信息界面" align=center />
+  </div>
+
+---
+  
+### 3、数据库设计
+![数据库设计](https://user-images.githubusercontent.com/74289276/123547938-5b7dc480-d795-11eb-979e-f21d9caf5eb0.png)
+```
+1）customer表：保存顾客注册时的信息
+2）merchants表：保存商家注册时的信息
+3）stores表：保存店铺信息
+4）goods表：保存商品信息
+5）submit_goodslist表：保存顾客提交的订单信息
+6）goods_list表：保存订单里面的商品信息
+7）location表：保存共享位置信息
+8）chatconfig表：保存聊天室的IP地址和端口号
+9）phone_message表：保存用户手机信息
+10）delete_image表：保存将要删除的图片信息
+```
+* 使用优化：
+1.	数据库事务：多条SQL作为一个整体提交给数据库系统，要么全部执行，要么全部取消，是一个不可分割的逻辑单元；两个SQL语句，一个下单成功，另外一个减少库存，事务保证一起成功或者一起失败。
+2.	锁：锁就是保证访问同一资源时，有个先后顺序管理，处理并发问题。
+3.	字段可空：数值类型的，不要可空，in查询  not in 查询，会没有结果，一般给个默认值；尽量非空，看情况（时间不适合默认值）
+4.	读写分离：二八原则：数据库中80%操作都是读，只有20%是写。实现原理：就是把读和写的压力分开，降低IO压力；一主多从，主库写从库读；数据同步的问题，从主库到从库（肯定是有延迟的，网速没问题，两三秒吧）
+
+### 4、关键技术
+#### 1）自制的加密和解密算法：
+该算法系统的项目在我的GitHub上：[PassWordSystem](https://github.com/ZhangHeng0805/PassWordSystem)。该密码算法系统目前总共有三种模式：（摩斯密码，zh自制和随机秘钥）。
+1.	摩斯密码：只能加密英文字符和数字，使用国际通用摩斯密码加密，自己添加了一些新字符的摩斯码；
+2.	zh自制密码：可以加密任意字符，核心是通过字符的ASCII码进行加密计算，加密过后的密文就是该字符的加密过后的ASCII码值，目前一共有三种加密算法，只有加密和解密的算法模式选择一致才能解密出正确的明文。
+3.	随机秘钥密码：就是在zh自制密码的基础上加上了由随机数字组成的随机秘钥，通过字符ASCII码值和随机秘钥的数字进行加密计算等到密文的ASCII码，再讲密文的ASCII码转译为密文字符，只有密文字符和秘钥经过我的解密算法才能得到正确的密文。
+项目使用：本项目系统中的Android项目中的用户密码的保存使用了该加密算法的第二种加密模式(zh自制)，第二种模式(zh自制)主要是对字符的ASCII码进行操作计算，目前zh自制加密有3种计算方法(加密和对应的解密模式)，只有加密和解密的模式一致才能解出密码。
+
