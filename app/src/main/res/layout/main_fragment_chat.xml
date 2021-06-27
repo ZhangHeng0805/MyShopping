@@ -62,6 +62,7 @@
             android:layout_weight="15"
             android:padding="8dp"
             android:textSize="16sp"
+            android:maxLines="1"
             android:background="@drawable/btn"
             android:hint="@string/main_chatfragment_et_hint"/>
         <Button
