@@ -32,7 +32,7 @@
   <img src="https://user-images.githubusercontent.com/74289276/123545325-07211780-d78a-11eb-8744-8cb8a650b3c5.jpg" width = "150" height = "300" alt="聊天" align=center />
   <img src="https://user-images.githubusercontent.com/74289276/123545334-0ab49e80-d78a-11eb-9c51-73df85f17e97.jpg" width = "150" height = "300" alt="我的" align=center />
   </div>
-***
+---
 * 图1-5：天气界面:：可以查询实时天气和近5天的天气情况
 * 图1-6：登录界面:：当应用没有登录时，在我的界面点击登录即可进入登录界面，用于顾客的登录，在该界面如果没有账号，则可以点击去注册进行账号的注册。
 * 图1-7：注册界面：用于APP顾客账号的注册。
@@ -43,7 +43,7 @@
   <img src="https://user-images.githubusercontent.com/74289276/123545338-0d16f880-d78a-11eb-8dbe-e0ce8391de14.jpg" width = "150" height = "300" alt="注册页" align=center />
   <img src="https://user-images.githubusercontent.com/74289276/123545328-08eadb00-d78a-11eb-81d4-4b1431428601.jpg" width = "150" height = "300" alt="设置位置" align=center />
   </div>
-***
+---
 图1-9：订单列表界:：展示自己的所有订单信息，点击每一个订单可以查看订单的详细商品。
 图1-10：用户信息界面：用户登录后，在我的界面点击用户头像即可进入用户信息界面，用于展示用户的账户信息，可以修改用户头像、用户名、密码。
 图1-11：位置共享界面：用于彼此同时展示用户的共享位置位置信息，点击黄色文字按钮可以刷新位置信息，点击右侧的按钮可以修改定位模式和地图样式，还可以缓存地图。
@@ -52,7 +52,7 @@
 <img src="https://user-images.githubusercontent.com/74289276/123545336-0be5cb80-d78a-11eb-889b-4ab801479c65.jpg" width = "150" height = "300" alt="用户信息界面" align=center />
 <img src="https://user-images.githubusercontent.com/74289276/123545331-0a1c0800-d78a-11eb-85c4-2cd0fddd2dc8.jpg" width = "150" height = "300" alt="位置共享界面" align=center />
 </div>
-***
+---
 * 订单提交
 * 订单提交完成
 * 商品分类
@@ -63,20 +63,12 @@
   <img src="https://user-images.githubusercontent.com/74289276/123545327-08524480-d78a-11eb-8b72-00f4504b2fe7.jpg" width = "150" height = "300" alt="商品分类" align=center />
   <img src="https://user-images.githubusercontent.com/74289276/123545335-0b4d3500-d78a-11eb-875a-922c719d985b.jpg" width = "150" height = "300" alt="选购商品" align=center />
   </div>
-***
-  ![登录页](https://user-images.githubusercontent.com/74289276/123545317-038d9080-d78a-11eb-8ce8-d17277f7be71.jpg)
-  ![订单列表](https://user-images.githubusercontent.com/74289276/123545318-05575400-d78a-11eb-955c-c858d3738bbc.jpg)
-  ![订单提交](https://user-images.githubusercontent.com/74289276/123545319-05efea80-d78a-11eb-9490-39b5f67bff8d.jpg)
-  ![订单提交完成](https://user-images.githubusercontent.com/74289276/123545320-06888100-d78a-11eb-912c-fa1151aff1a4.jpg)
-  ![聊天](https://user-images.githubusercontent.com/74289276/123545325-07211780-d78a-11eb-8744-8cb8a650b3c5.jpg)
-  ![启动页](https://user-images.githubusercontent.com/74289276/123545326-07b9ae00-d78a-11eb-966c-30a18774d570.jpg)
-  ![商品分类](https://user-images.githubusercontent.com/74289276/123545327-08524480-d78a-11eb-8b72-00f4504b2fe7.jpg)
-  ![设置位置](https://user-images.githubusercontent.com/74289276/123545328-08eadb00-d78a-11eb-81d4-4b1431428601.jpg)
-  ![天气查询页](https://user-images.githubusercontent.com/74289276/123545329-09837180-d78a-11eb-9cf6-185d0980b24a.jpg)
-  ![位置共享](https://user-images.githubusercontent.com/74289276/123545331-0a1c0800-d78a-11eb-85c4-2cd0fddd2dc8.jpg)
-  ![我的](https://user-images.githubusercontent.com/74289276/123545334-0ab49e80-d78a-11eb-9c51-73df85f17e97.jpg)
-  ![选购商品](https://user-images.githubusercontent.com/74289276/123545335-0b4d3500-d78a-11eb-875a-922c719d985b.jpg)
-  ![用户信息](https://user-images.githubusercontent.com/74289276/123545336-0be5cb80-d78a-11eb-889b-4ab801479c65.jpg)
-  ![主页](https://user-images.githubusercontent.com/74289276/123545337-0c7e6200-d78a-11eb-85cf-e2436f1a1332.jpg)
-  ![注册页](https://user-images.githubusercontent.com/74289276/123545338-0d16f880-d78a-11eb-8dbe-e0ce8391de14.jpg)
-
+---
+####（2）网页界面设计
+* 图2-1：登录界面:用于商家登录的界面
+* 图2-2：注册界面:用于注册商家地界面
+<div>
+  <img src="https://user-images.githubusercontent.com/74289276/123545319-05efea80-d78a-11eb-9490-39b5f67bff8d.jpg" width = "150" height = "300" alt="订单提交" align=center />
+  <img src="https://user-images.githubusercontent.com/74289276/123545320-06888100-d78a-11eb-912c-fa1151aff1a4.jpg" width = "150" height = "300" alt="订单提交完成" align=center />
+  </div>
+---
