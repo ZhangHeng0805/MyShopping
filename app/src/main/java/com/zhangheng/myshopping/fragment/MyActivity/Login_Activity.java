@@ -16,8 +16,8 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.google.gson.Gson;
 import com.zhangheng.myshopping.R;
-import com.zhangheng.myshopping.bean.Result;
-import com.zhangheng.myshopping.bean.shopping.UserCustomer;
+import com.zhangheng.myshopping.bean.Message;
+import com.zhangheng.myshopping.bean.shopping.Customer;
 import com.zhangheng.myshopping.util.OkHttpMessageUtil;
 import com.zhangheng.myshopping.util.PhoneNumUtil;
 import com.zhangheng.zh.ASCII;
@@ -59,14 +59,14 @@ public class Login_Activity extends Activity {
             public void onClick(View view) {
                 String phone=m15_myfragment_login_et_username.getText().toString();
                 String password=m15_myfragment_login_et_password.getText().toString();
-                if (phone.length()==11){
+                if (PhoneNumUtil.isMobile(phone)){
                     if (PhoneNumUtil.isMobile(phone)) {
                         if (password.length() >= 6 && password.length() <= 18) {
-                            UserCustomer user = new UserCustomer();
-                            user.setUsername(phone);
-                            user.setPassword(password);
+                            Customer customer = new Customer();
+                            customer.setPhone(phone);
+                            customer.setPassword(password);
 //                            Log.d(TAG, "onClick: " + user.toString());
-                            submit(user);
+                            submit(customer);
                         } else {
                             dialog("输入错误", "密码不能为空，且限制6~18个字符以内");
                         }
@@ -74,12 +74,13 @@ public class Login_Activity extends Activity {
                         dialog("输入错误", "非法手机号，请输入正确的手机号码");
                     }
                 }else {
-                    dialog("输入错误","请输入11位格式的手机号");
+                    dialog("输入错误","请输入正确的11位格式的手机号");
                 }
             }
         });
     }
-    private void submit(final UserCustomer user){
+    //用户登录请求
+    private void submit(final Customer customer){
         final ProgressDialog progressDialog=new ProgressDialog(Login_Activity.this);
         progressDialog.setMessage("登录中。。。");
         progressDialog.setIndeterminate(true);
@@ -87,7 +88,7 @@ public class Login_Activity extends Activity {
         progressDialog.show();
         String url=getResources().getString(R.string.zhangheng_url)+"Customer/Login";
         Gson gson = new Gson();
-        String json = gson.toJson(user);
+        String json = gson.toJson(customer);
         OkHttpUtils
                 .post()
                 .url(url)
@@ -104,9 +105,9 @@ public class Login_Activity extends Activity {
                     @Override
                     public void onResponse(String response, int id) {
                         Gson gson1 = new Gson();
-                        Result resuilt = new Result();
+                        Message msg = new Message();
                         try {
-                            resuilt = gson1.fromJson(response, Result.class);
+                            msg = gson1.fromJson(response, Message.class);
                         }catch (Exception e){
                             if (OkHttpMessageUtil.response(response)==null){
                                 dialog("错误",e.getMessage());
@@ -115,18 +116,18 @@ public class Login_Activity extends Activity {
                             }
                         }
                         progressDialog.dismiss();
-                        if (resuilt!=null){
-                            if (resuilt.getTitle().equals("登录成功")){
+                        if (msg!=null){
+                            if (msg.getCode()==200){
                                 SharedPreferences sharedPreferences = getSharedPreferences("customeruser", MODE_PRIVATE);
                                 SharedPreferences.Editor editor=sharedPreferences.edit();
-                                editor.putString("phone",user.getUsername());
-                                editor.putString("name",resuilt.getMessage());
-                                ASCII ascii = new ASCII(user.getPassword(), 3);//将密码加密
+                                editor.putString("phone",customer.getPhone());
+                                editor.putString("name",msg.getMessage());
+                                ASCII ascii = new ASCII(customer.getPassword(), 3);//将密码加密
                                 editor.putString("password",ascii.getresuilt());
                                 editor.commit();
                                 finish();
                             }else {
-                                dialog(resuilt.getTitle(),resuilt.getMessage());
+                                dialog(msg.getTitle(),msg.getMessage());
                             }
                         }else {
                             AlertDialog.Builder builder=new AlertDialog.Builder(Login_Activity.this);

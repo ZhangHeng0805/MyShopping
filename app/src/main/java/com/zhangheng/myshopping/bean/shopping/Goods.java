@@ -15,7 +15,9 @@ public class Goods {
 
     private String goods_type;//类型
 
-    private Integer goods_month_much;//月销量
+    private Integer goods_sales;//销量
+
+    private Integer goods_num;//库存
 
     private double goods_price;//价格
 
@@ -24,6 +26,8 @@ public class Goods {
     private Integer store_id;//店铺id
 
     private String time;//时间
+
+    private int state;//商品状态(0:上线；1:下线)
 
     private int num;//数量
 
@@ -67,12 +71,20 @@ public class Goods {
         this.goods_type = goods_type;
     }
 
-    public Integer getGoods_month_much() {
-        return goods_month_much;
+    public Integer getGoods_sales() {
+        return goods_sales;
     }
 
-    public void setGoods_month_much(Integer goods_month_much) {
-        this.goods_month_much = goods_month_much;
+    public void setGoods_sales(Integer goods_sales) {
+        this.goods_sales = goods_sales;
+    }
+
+    public Integer getGoods_num() {
+        return goods_num;
+    }
+
+    public void setGoods_num(Integer goods_num) {
+        this.goods_num = goods_num;
     }
 
     public double getGoods_price() {
@@ -113,5 +125,13 @@ public class Goods {
 
     public void setNum(int num) {
         this.num = num;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 }

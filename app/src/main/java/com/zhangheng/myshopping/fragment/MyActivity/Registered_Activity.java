@@ -23,7 +23,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.zhangheng.myshopping.R;
-import com.zhangheng.myshopping.bean.Result;
+import com.zhangheng.myshopping.bean.Message;
 import com.zhangheng.myshopping.bean.shopping.Customer;
 import com.zhangheng.myshopping.util.OkHttpMessageUtil;
 import com.zhangheng.myshopping.util.PhoneNumUtil;
@@ -32,6 +32,7 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.Call;
@@ -99,8 +100,9 @@ public class Registered_Activity extends Activity {
                                     customer.setPassword(password);
                                     customer.setSex(sex);
                                     customer.setIcon(icon);
-                                    customer.setTime(TimeUtil.getSystemTime());
+                                    customer.setTime(TimeUtil.getSystemTime(new Date()));
                                     customer.setAddress("地址为空");
+                                    customer.setState(0);
 //                                    Log.d(TAG, "onClick: " + customer.toString());
                                     submit(customer);
                                 } else {
@@ -125,13 +127,14 @@ public class Registered_Activity extends Activity {
 
     }
 
+    //注册提交
     private void submit(Customer customer){
         final ProgressDialog progressDialog=new ProgressDialog(Registered_Activity.this);
         progressDialog.setMessage("注册中。。。");
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
-        String url=getResources().getString(R.string.zhangheng_url)+"RegisterCustomer/register";
+        String url=getResources().getString(R.string.zhangheng_url)+"Customer/register";
         Gson gson = new Gson();
         String json = gson.toJson(customer);
         OkHttpUtils
@@ -150,9 +153,9 @@ public class Registered_Activity extends Activity {
                     @Override
                     public void onResponse(String response, int id) {
                         Gson gson = new Gson();
-                        Result result=new Result();
+                        Message msg=new Message();
                         try {
-                            result = gson.fromJson(response, Result.class);
+                            msg = gson.fromJson(response, Message.class);
                         }catch (Exception e){
                             if (OkHttpMessageUtil.response(response)==null){
                                 dialog("错误",e.getMessage());
@@ -161,12 +164,12 @@ public class Registered_Activity extends Activity {
                             }
                         }
                         progressDialog.dismiss();
-                        if (result!=null) {
-                            if (result.getTitle().equals("注册成功")){
+                        if (msg!=null) {
+                            if (msg.getCode()==200){
                                 AlertDialog.Builder builder=new AlertDialog.Builder(Registered_Activity.this);
                                 builder.setCancelable(false);
-                                builder.setTitle(result.getTitle());
-                                builder.setMessage(result.getMessage());
+                                builder.setTitle(msg.getTitle());
+                                builder.setMessage(msg.getMessage());
                                 builder.setPositiveButton("去登录",new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -175,7 +178,7 @@ public class Registered_Activity extends Activity {
                                 });
                                 builder.create().show();
                             }else {
-                                dialog(result.getTitle(), result.getMessage());
+                                dialog(msg.getTitle(), msg.getMessage());
                             }
                         }else {
                             AlertDialog.Builder builder=new AlertDialog.Builder(Registered_Activity.this);
@@ -193,8 +196,10 @@ public class Registered_Activity extends Activity {
                     }
                 });
     }
+    //获取顾客头像集合
     private void getImage(){
-        String url=getResources().getString(R.string.zhangheng_url)+"RegisterCustomer/customericonlist";
+        String url=getResources().getString(R.string.zhangheng_url)+"Customer/customericonlist";
+
         OkHttpUtils
                 .get()
                 .url(url)
@@ -234,7 +239,7 @@ public class Registered_Activity extends Activity {
                         List<String> data=new ArrayList<>();
                         if (iconlist!=null) {
                             for (String s : iconlist) {
-                                data.add(getResources().getString(R.string.zhangheng_url) + "downloads/show/" + s);
+                                data.add(getResources().getString(R.string.zhangheng_url) + "fileload/show/" + s);
                             }
                             Log.d(TAG, "onResponse: " + data.size());
                             ImageAdapter imageAdapter = new ImageAdapter(getApplicationContext(), data);

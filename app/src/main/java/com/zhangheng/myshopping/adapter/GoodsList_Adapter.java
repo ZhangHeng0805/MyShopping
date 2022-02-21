@@ -62,6 +62,7 @@ public class GoodsList_Adapter extends BaseAdapter {
             holder.item_booklist_title=view.findViewById(R.id.item_goodslist_title);
             holder.item_booklist_catalog=view.findViewById(R.id.item_goodslist_catalog);
             holder.item_booklist_bytime=view.findViewById(R.id.item_goodslist_bytime);
+            holder.item_booklist_bynum=view.findViewById(R.id.item_goodslist_bynum);
             holder.item_booklist_tags=view.findViewById(R.id.item_goodslist_tags);
             holder.btn_add=view.findViewById(R.id.item_goodslist_btn_add);
             holder.btn_sub=view.findViewById(R.id.item_goodslist_btn_sub);
@@ -85,8 +86,11 @@ public class GoodsList_Adapter extends BaseAdapter {
         String catalog = d.getStore_name();
         holder.item_booklist_catalog.setText(catalog);
         //销量
-        Integer goods_month_much = d.getGoods_month_much();
-        holder.item_booklist_bytime.setText(String.valueOf(goods_month_much));
+        Integer goods_sales = d.getGoods_sales();
+        holder.item_booklist_bytime.setText(String.valueOf(goods_sales));
+        //库存
+        Integer goods_num = d.getGoods_num();
+        holder.item_booklist_bynum.setText(String.valueOf(goods_num));
         //简介
         String tags = d.getGoods_introduction();
         holder.item_booklist_tags.setText(tags);
@@ -105,15 +109,17 @@ public class GoodsList_Adapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 String s = holder.nuum.getText().toString();
-                count=Integer.parseInt(s);
-                count++;
-                d.setNum(count);
-                myOnClickNum.myNumClick(i,1);
-                holder.nuum.setText(String.valueOf(d.getNum()));
-                if (!holder.nuum.getText().toString().equals("0")){
-                    holder.nuum.setTextColor(context.getResources().getColor(R.color.yellow));
-                }else {
-                    holder.nuum.setTextColor(context.getResources().getColor(R.color.black));
+                count = Integer.parseInt(s);
+                if (d.getGoods_num() > 0 && count<d.getGoods_num()) {
+                    count++;
+                    d.setNum(count);
+                    myOnClickNum.myNumClick(i, 1);
+                    holder.nuum.setText(String.valueOf(d.getNum()));
+                    if (!holder.nuum.getText().toString().equals("0")) {
+                        holder.nuum.setTextColor(context.getResources().getColor(R.color.yellow));
+                    } else {
+                        holder.nuum.setTextColor(context.getResources().getColor(R.color.black));
+                    }
                 }
             }
         });
@@ -141,7 +147,7 @@ public class GoodsList_Adapter extends BaseAdapter {
     class Holder{
         ImageView item_booklist_image;
         TextView item_booklist_title,item_booklist_catalog
-                ,item_booklist_bytime,item_booklist_tags,nuum,price;
+                ,item_booklist_bytime,item_booklist_bynum,item_booklist_tags,nuum,price;
         LinearLayout item_layout_booklist;
         Button btn_add,btn_sub;
 

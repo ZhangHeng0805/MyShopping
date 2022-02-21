@@ -23,22 +23,20 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.gson.Gson;
 import com.zhangheng.myshopping.base.BaseFragment;
-import com.zhangheng.myshopping.bean.Result;
+import com.zhangheng.myshopping.bean.Message;
 import com.zhangheng.myshopping.fragment.ChatFragment;
 import com.zhangheng.myshopping.fragment.HomeFragment;
 import com.zhangheng.myshopping.fragment.MyFragment;
 import com.zhangheng.myshopping.getphoneMessage.PhoneSystem;
 import com.zhangheng.myshopping.util.DialogUtil;
+import com.zhangheng.myshopping.util.GetPhoneInfo;
 import com.zhangheng.myshopping.util.OkHttpMessageUtil;
-import com.zhangheng.myshopping.util.TimeUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.Call;
 
@@ -88,7 +86,9 @@ public class MainActivity extends FragmentActivity {
             // for Activity#requestPermissions for more details.
             return;
         }
-        if (phoneManager.getLine1Number().startsWith("+86")){
+        if (phoneManager.getLine1Number()==null){
+
+        } else if (phoneManager.getLine1Number().startsWith("+86")){
             getPhone=phoneManager.getLine1Number().replace("+86","");
         }else {
             getPhone = phoneManager.getLine1Number();//得到电话号码
@@ -171,21 +171,14 @@ public class MainActivity extends FragmentActivity {
         rg_main=findViewById(R.id.main_rg_main);
     }
 
+    //检查应用更新
     public void getupdatelist(){
         String url=getResources().getString(R.string.zhangheng_url)
-                +"filelist/updatelist/"+getResources().getString(R.string.app_name);
-        Map<String,String> map=new HashMap<>();
-        if (getPhone!=null) {
-            map.put("phonenum", getPhone);
-            map.put("model", model);
-            map.put("sdk", sdk);
-            map.put("release", release);
-            map.put("time", TimeUtil.getSystemTime());
-        }
+                +"fileload/updatelist/"+getResources().getString(R.string.update_name);
         OkHttpUtils
                 .post()
                 .url(url)
-                .params(map)
+                .addHeader("User-Agent", GetPhoneInfo.getHead(getApplicationContext()))
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -198,25 +191,25 @@ public class MainActivity extends FragmentActivity {
 
                     @Override
                     public void onResponse(String response, int id) {
-                        Result resuilt=null;
+                        Message msg=null;
                         Gson gson=new Gson();
                         try {
-                            resuilt = gson.fromJson(response, Result.class);
+                            msg = gson.fromJson(response, Message.class);
                         }catch (Exception e){
 
                         }
                         if (response.indexOf("WEB服务器没有运行")<1) {
-                            if (resuilt != null) {
+                            if (msg != null) {
                                 Toast.makeText(MainActivity.this, "服务器已连接", Toast.LENGTH_SHORT).show();
 //                                m3_tv_service.setText("服务器已连接");
 //                                m3_tv_service.setTextColor(getColor(R.color.black));
-                                if (!resuilt.getTitle().equals("null")) {
-                                    if (resuilt.getTitle().equals(getResources().getString(R.string.app_name))) {
+                                if (msg.getCode()==200) {
+                                    if (msg.getTitle().equals(getResources().getString(R.string.app_name))) {
                                         sharedPreferences = getSharedPreferences("update", MODE_PRIVATE);
                                         String urlname = sharedPreferences.getString("urlname", "");
-                                        if (!urlname.equals(resuilt.getMessage())) {
-                                            if (!versionCode.equals(appversion(resuilt.getMessage())))
-                                                showUpdate(resuilt.getMessage());
+                                        if (!urlname.equals(msg.getMessage())) {
+                                            if (!versionCode.equals(appversion(msg.getMessage())))
+                                                showUpdate(msg.getMessage());
                                         } else {
                                             Log.d("urlname", "urlname与更新地址一致");
                                         }
@@ -236,6 +229,7 @@ public class MainActivity extends FragmentActivity {
                     }
                 });
     }
+    //获取APP版本
     public String appversion(String name){
         String[] strings=name.split("/");
         String appname=strings[strings.length-1].replace(".apk","");
@@ -248,6 +242,7 @@ public class MainActivity extends FragmentActivity {
         }
         return app;
     }
+    //弹窗提示更新
     public void showUpdate(final String name){
         String app=appversion(name);
         builder=new AlertDialog.Builder(this)
@@ -260,7 +255,7 @@ public class MainActivity extends FragmentActivity {
                         Intent intent=new Intent();
                         intent.setAction(Intent.ACTION_VIEW);
                         String url = getResources().getString(R.string.zhangheng_url)
-                                +"downloads/downupdate/"+name;
+                                +"fileload/"+name;
                         intent.setData(Uri.parse(url));
                         startActivity(intent);
                     }

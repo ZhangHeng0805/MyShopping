@@ -37,17 +37,17 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.geocoder.StreetNumber;
 import com.google.gson.Gson;
 import com.zhangheng.myshopping.R;
-import com.zhangheng.myshopping.bean.Result;
+import com.zhangheng.myshopping.bean.Message;
+import com.zhangheng.myshopping.bean.shopping.Customer;
 import com.zhangheng.myshopping.util.DialogUtil;
 import com.zhangheng.myshopping.util.OkHttpMessageUtil;
+import com.zhangheng.zh.Resuilt;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.Call;
 
@@ -65,7 +65,7 @@ public class Location_Activity extends Activity implements GeocodeSearch.OnGeoco
     private EditText m15_myfragment_location_et_locaton;
     private Button m15_myfragment_location_btn_save,m15_myfragment_location_btn_ref;
     private SharedPreferences preferences;
-    private String phone;
+    private String phone,password;
 
     private String[] permissions = {
             Manifest.permission.INTERNET,//网络
@@ -112,7 +112,11 @@ public class Location_Activity extends Activity implements GeocodeSearch.OnGeoco
                 if (phone!=null){
                     String address=m15_myfragment_location_et_locaton.getText().toString();
                     if (address.length()>3){
-                        myOkHttp(address,phone);
+                        Customer customer = new Customer();
+                        customer.setPhone(phone);
+                        customer.setPassword(password);
+                        customer.setAddress(address);
+                        myOkHttp(customer);
                     }else {
                         DialogUtil.dialog(Location_Activity.this,"地址不能为空或地址过短","输入的地址过短");
                     }
@@ -169,20 +173,19 @@ public class Location_Activity extends Activity implements GeocodeSearch.OnGeoco
             }
         });
     }
-    private void myOkHttp(final String address, String phone){
+    private void myOkHttp(final Customer customer){
         final ProgressDialog progressDialog=new ProgressDialog(Location_Activity.this);
         progressDialog.setMessage("提交保存中。。。");
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
         String url=getResources().getString(R.string.zhangheng_url)+"Customer/setAddress";
-        Map<String,String> map=new HashMap<>();
-        map.put("address",address);
-        map.put("phone",phone);
+        Gson gson = new Gson();
+        String json = gson.toJson(customer);
         OkHttpUtils
                 .post()
                 .url(url)
-                .params(map)
+                .addParams("json",json)
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -194,10 +197,10 @@ public class Location_Activity extends Activity implements GeocodeSearch.OnGeoco
 
                     @Override
                     public void onResponse(String response, int id) {
-                        Result resuilt=new Result();
+                        Message msg=new Message();
                         Gson gson = new Gson();
                         try {
-                            resuilt = gson.fromJson(response, Result.class);
+                            msg = gson.fromJson(response, Message.class);
                         }catch (Exception e){
                             if (OkHttpMessageUtil.response(response)==null){
                                 DialogUtil.dialog(Location_Activity.this,"错误",e.getMessage());
@@ -206,12 +209,12 @@ public class Location_Activity extends Activity implements GeocodeSearch.OnGeoco
                             }
                         }
                         progressDialog.dismiss();
-                        if (resuilt!=null){
-                            if (resuilt.getTitle().equals("保存成功")){
-                                savePreferences(address);
+                        if (msg!=null){
+                            if (msg.getCode()==200){
+                                savePreferences(customer.getAddress());
                             }else {
                             }
-                            DialogUtil.dialog(Location_Activity.this,resuilt.getTitle(),resuilt.getMessage());
+                            DialogUtil.dialog(Location_Activity.this,msg.getTitle(),msg.getMessage());
                         }else {
                             AlertDialog.Builder d=new AlertDialog.Builder(Location_Activity.this);
                             d.setTitle("保存失败");
@@ -234,6 +237,11 @@ public class Location_Activity extends Activity implements GeocodeSearch.OnGeoco
     private void getPreferences(){
         preferences = getSharedPreferences("customeruser", MODE_PRIVATE);
         phone = preferences.getString("phone", null);
+        password = preferences.getString("password", null);
+        if (password!=null) {
+            Resuilt resuilt = new Resuilt(password, 3);    //密码解密
+            password = resuilt.getresuilt();
+        }
     }
     private void savePreferences(String address){
         SharedPreferences preferences = getSharedPreferences("customeruser", MODE_PRIVATE);

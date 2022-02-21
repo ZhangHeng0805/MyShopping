@@ -25,7 +25,8 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.zhangheng.myshopping.R;
 import com.zhangheng.myshopping.base.BaseFragment;
-import com.zhangheng.myshopping.bean.Result;
+import com.zhangheng.myshopping.bean.Const;
+import com.zhangheng.myshopping.bean.Message;
 import com.zhangheng.myshopping.bean.shopping.Customer;
 import com.zhangheng.myshopping.fragment.MyActivity.Location_Activity;
 import com.zhangheng.myshopping.fragment.MyActivity.Login_Activity;
@@ -33,13 +34,11 @@ import com.zhangheng.myshopping.fragment.MyActivity.OrderActivity;
 import com.zhangheng.myshopping.fragment.MyActivity.UserInfoActivity;
 import com.zhangheng.myshopping.getphoneMessage.PhoneSystem;
 import com.zhangheng.myshopping.util.DialogUtil;
+import com.zhangheng.myshopping.util.GetPhoneInfo;
 import com.zhangheng.myshopping.util.OkHttpMessageUtil;
 import com.zhangheng.zh.Resuilt;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import okhttp3.Call;
 
@@ -99,7 +98,7 @@ public class MyFragment extends BaseFragment {
                         }
                         break;
                     case 1:
-                        String html=getResources().getString(R.string.zhangheng_url)+"registration";
+                        String html=getResources().getString(R.string.zhangheng_url)+"regist_merchantsPage";
                         Intent intent=new Intent();
                         intent.setAction(Intent.ACTION_VIEW);
                         intent.setData(Uri.parse(html));
@@ -114,7 +113,14 @@ public class MyFragment extends BaseFragment {
                             DialogUtil.dialog(getContext(),"请登录后在操作","用户没有登录，请登录后在操作");
                         }
                         break;
-                    case 3:
+                    case 3://联系我们
+                        String html1= Const.contact_url;
+                        Intent intent1=new Intent();
+                        intent1.setAction(Intent.ACTION_VIEW);
+                        intent1.setData(Uri.parse(html1));
+                        startActivity(intent1);
+                        break;
+                    case 4:
                         getupdatelist();
                         break;
                 }
@@ -140,6 +146,7 @@ public class MyFragment extends BaseFragment {
             }
         });
     }
+    //检查更新
     public void getupdatelist(){
         final ProgressDialog progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("检查更新中。。。");
@@ -147,11 +154,11 @@ public class MyFragment extends BaseFragment {
         progressDialog.setCancelable(false);
         progressDialog.show();
         String url=getResources().getString(R.string.zhangheng_url)
-                +"filelist/updatelist/"+getResources().getString(R.string.app_name);
-
+                +"fileload/updatelist/"+getResources().getString(R.string.update_name);
         OkHttpUtils
                 .post()
                 .url(url)
+                .addHeader("User-Agent", GetPhoneInfo.getHead(getContext()))
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -164,25 +171,25 @@ public class MyFragment extends BaseFragment {
 
                     @Override
                     public void onResponse(String response, int id) {
-                        Result resuilt=null;
+                        Message msg=new Message();
                         Gson gson=new Gson();
                         try {
-                            resuilt = gson.fromJson(response, Result.class);
+                            msg = gson.fromJson(response, Message.class);
                         }catch (Exception e){
 
                         }
                         progressDialog.dismiss();
                         if (response.indexOf("WEB服务器没有运行")<1) {
-                            if (resuilt != null) {
-                                if (!resuilt.getTitle().equals("null")) {
-                                    if (resuilt.getTitle().equals(getResources().getString(R.string.app_name))) {
+                            if (msg != null) {
+                                if (msg.getCode()==200) {
+                                    if (msg.getTitle().equals(getResources().getString(R.string.app_name))) {
                                        SharedPreferences sharedPreferences = getContext().getSharedPreferences("乐购update", MODE_PRIVATE);
                                         String urlname = sharedPreferences.getString("urlname", "");
-                                        if (!urlname.equals(resuilt.getMessage())) {
-                                            if (!versionCode.equals(appversion(resuilt.getMessage()))) {
-                                                showUpdate(resuilt.getMessage());
+                                        if (!urlname.equals(msg.getMessage())) {
+                                            if (!versionCode.equals(appversion(msg.getMessage()))) {
+                                                showUpdate(msg.getMessage());
                                             }else {
-                                                DialogUtil.dialog(getContext(),"最新版本："+resuilt.getMessage(),"当前应用已经是最新版本了");
+                                                DialogUtil.dialog(getContext(),"最新版本："+msg.getMessage(),"当前应用已经是最新版本了");
                                             }
                                         } else {
                                             Log.d("urlname", "urlname与更新地址一致");
@@ -190,13 +197,13 @@ public class MyFragment extends BaseFragment {
 
                                         }
                                     } else {
-                                        Log.d("title", "title与应用的名称不一致"+resuilt.getTitle());
+                                        Log.d("title", "title与应用的名称不一致"+msg.getTitle());
                                         DialogUtil.dialog(getContext(),"更新错误","更新应用与本应用的名称不一致");
 
                                     }
                                 } else {
                                     Log.d("title", "title为null");
-                                    DialogUtil.dialog(getContext(),"更新为空",resuilt.getMessage());
+                                    DialogUtil.dialog(getContext(),"更新为空",msg.getMessage());
                                 }
                             } else {
                                 Log.d("resuilt", "resuilt为空");
@@ -209,6 +216,7 @@ public class MyFragment extends BaseFragment {
                     }
                 });
     }
+    //解析App的版本
     public String appversion(String name){
         String[] strings=name.split("/");
         String appname=strings[strings.length-1].replace(".apk","");
@@ -221,6 +229,7 @@ public class MyFragment extends BaseFragment {
         }
         return app;
     }
+    //弹窗提示更新
     public void showUpdate(final String name){
         String app=appversion(name);
         AlertDialog.Builder builder=new AlertDialog.Builder(getContext())
@@ -233,7 +242,7 @@ public class MyFragment extends BaseFragment {
                         Intent intent=new Intent();
                         intent.setAction(Intent.ACTION_VIEW);
                         String url = getResources().getString(R.string.zhangheng_url)
-                                +"downloads/downupdate/"+name;
+                                +"fileload/"+name;
                         intent.setData(Uri.parse(url));
                         startActivity(intent);
                     }
@@ -270,20 +279,20 @@ public class MyFragment extends BaseFragment {
                 });
         builder.create().show();
     }
-    private void getIcon(){
+
+    //获取账号信息
+    private void getCustomer(Customer customer){
         final ProgressDialog progressDialog=new ProgressDialog(getContext());
         progressDialog.setMessage("刷新中。。。");
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
         String url=getResources().getString(R.string.zhangheng_url)+"Customer/getCustomer";
-        Map<String,String> map=new HashMap<>();
-        map.put("username",phone);
-        map.put("password",password);
+        String json=new Gson().toJson(customer);
         OkHttpUtils
                 .post()
                 .url(url)
-                .params(map)
+                .addParams("customerJson",json)
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -322,7 +331,7 @@ public class MyFragment extends BaseFragment {
                         }
                         progressDialog.dismiss();
                         if (customer!=null){
-                            String url=getResources().getString(R.string.zhangheng_url)+"downloads/show/"+customer.getIcon();
+                            String url=getResources().getString(R.string.zhangheng_url)+"fileload/show/"+customer.getIcon();
                             Glide.with(getContext()).load(url).into(main_fragment_my_iv_usericon);
                             main_fragment_my_txt_useraddress.setText(customer.getAddress());
                             SharedPreferences sharedPreferences=getContext().getSharedPreferences("customeruser",MODE_PRIVATE);
@@ -357,7 +366,10 @@ public class MyFragment extends BaseFragment {
         getPreferences();
         if (phone!=null&&name!=null&&password!=null){
             main_fragment_my_btn_exit.setVisibility(View.VISIBLE);
-            getIcon();
+            Customer customer = new Customer();
+            customer.setPhone(phone);
+            customer.setPassword(password);
+            getCustomer(customer);
             main_fragment_my_txt_username.setText(name);
             main_fragment_my_txt_useraddress.setText(address);
         }else {
@@ -377,6 +389,7 @@ public class MyFragment extends BaseFragment {
         address = preferences.getString("address", null);
         Log.d(TAG, "getPreferences: "+phone+name);
     }
+    //退出登录提示框
     private void clearPreferences(){
         if (name!=null||password!=null) {
             AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
@@ -402,6 +415,7 @@ public class MyFragment extends BaseFragment {
             exitState();
         }
     }
+    //退出登录清除账号信息恢复样式
     private void exitState(){
         preferences = mContext.getSharedPreferences("customeruser", MODE_PRIVATE);
         SharedPreferences.Editor editor1 = preferences.edit();
@@ -422,15 +436,17 @@ public class MyFragment extends BaseFragment {
         }
 
         private String[] info={
-                "位置设置",
+                "收货地址",
                 "注册商家",
                 "订单列表",
+                "联系我们",
                 "应用版本号："+ PhoneSystem.getVersionCode(getContext()),
         };
         private Integer[] icon={
                 R.drawable.location,
                 R.drawable.zhuce,
                 R.drawable.order,
+                R.drawable.find,
                 R.drawable.find,
         };
 

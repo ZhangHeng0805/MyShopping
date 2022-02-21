@@ -11,7 +11,7 @@ public class goods {
     private String goods_name;
     private Double goods_price;
     private Integer num;
-    private String state;
+    private int state;
     private String list_id;
 
     public Integer getGoods_id() {
@@ -54,11 +54,11 @@ public class goods {
         this.num = num;
     }
 
-    public String getState() {
+    public int getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(int state) {
         this.state = state;
     }
 

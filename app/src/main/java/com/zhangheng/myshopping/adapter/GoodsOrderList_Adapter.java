@@ -65,7 +65,7 @@ public class GoodsOrderList_Adapter extends BaseAdapter {
             holder.name=view.findViewById(R.id.item_goodsmeunlist_txt_goodsname);
             holder.catalog=view.findViewById(R.id.item_goodsmeunlist_txt_goodsintro);
             holder.price=view.findViewById(R.id.item_goodsmeunlist_txt_price);
-            holder.nuum=view.findViewById(R.id.item_goodsmeunlist_txt_num);
+            holder.num=view.findViewById(R.id.item_goodsmeunlist_txt_num);
             holder.LL_Order_result=view.findViewById(R.id.LL_Order_result);
             view.setTag(holder);
         }else {
@@ -75,35 +75,43 @@ public class GoodsOrderList_Adapter extends BaseAdapter {
         holder.LL_Order_result.setVisibility(View.GONE);
         String goods_name = g.getGoods_name();
         holder.name.setText(goods_name);
-        String state = g.getState();
+        int state = g.getState();
+        String str_state="";
 
         switch (state){
-            case "订单确认":
+            case 2:
                 holder.catalog.setTextColor(context.getResources().getColor(R.color.green));
                 holder.LL_Order_result.setVisibility(View.VISIBLE);
+                str_state="待收货";
                 break;
-            case "订单拒绝":
+            case 1:
                 holder.catalog.setTextColor(context.getResources().getColor(R.color.red));
+                holder.LL_Order_result.setVisibility(View.VISIBLE);
+                holder.btn_OK.setVisibility(View.GONE);
+                str_state="拒绝发货";
                 break;
-            case "未处理":
+            case 0:
                 holder.catalog.setTextColor(context.getResources().getColor(R.color.yellow));
+                str_state="未处理";
                 break;
-            case "已收货":
+            case 3:
                 holder.catalog.setTextColor(context.getResources().getColor(R.color.blue));
+                str_state="已收货";
                 break;
-            case "退货":
+            case 4:
                 holder.catalog.setTextColor(context.getResources().getColor(R.color.red));
+                str_state="退货";
                 break;
         }
-        holder.catalog.setText(state);
+        holder.catalog.setText(str_state);
         double goods_price = g.getGoods_price();
         holder.price.setText(String.valueOf(goods_price)+"元");
 
-        holder.nuum.setText(String.valueOf(g.getNum())+"件");
-        if (!holder.nuum.getText().toString().equals("0")){
-            holder.nuum.setTextColor(context.getResources().getColor(R.color.yellow));
+        holder.num.setText(String.valueOf(g.getNum())+"件");
+        if (!holder.num.getText().toString().equals("0")){
+            holder.num.setTextColor(context.getResources().getColor(R.color.yellow));
         }else {
-            holder.nuum.setTextColor(context.getResources().getColor(R.color.black));
+            holder.num.setTextColor(context.getResources().getColor(R.color.black));
         }
         holder.btn_OK.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,7 +130,7 @@ public class GoodsOrderList_Adapter extends BaseAdapter {
     }
     class Holder{
         TextView name,catalog
-                ,nuum,price;
+                ,num,price;
         LinearLayout LL_Order_result;
         Button btn_OK,btn_NO;
 

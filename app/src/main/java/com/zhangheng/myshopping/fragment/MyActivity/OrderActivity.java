@@ -18,7 +18,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.zhangheng.myshopping.R;
 import com.zhangheng.myshopping.adapter.GoodsOrderList_Adapter;
-import com.zhangheng.myshopping.bean.Result;
+import com.zhangheng.myshopping.bean.Message;
+import com.zhangheng.myshopping.bean.shopping.Customer;
 import com.zhangheng.myshopping.bean.shopping.submitgoods.SubmitGoods;
 import com.zhangheng.myshopping.bean.shopping.submitgoods.goods;
 import com.zhangheng.myshopping.util.DialogUtil;
@@ -72,8 +73,8 @@ public class OrderActivity extends Activity {
         order_iv_help.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String help="订单确认：表示商家已经确认接单了，只需等待收货。\n\n" +
-                        "订单拒绝：表示商家拒绝接单，此订单已经无效。\n\n" +
+                String help="待收货：表示商家已经确认接单了，只需等待收货。\n\n" +
+                        "拒绝发货：表示商家拒绝接单，此订单已经无效。\n\n" +
                         "未处理：表示顾客已经提交订单，但商家还未处理该订单。\n\n" +
                         "已收货：表示商家已经确认订单，并且顾客已经确认收货。\n\n" +
                         "退货：表示商家已经确认订单，但顾客拒绝收货，并且退货。\n";
@@ -81,17 +82,19 @@ public class OrderActivity extends Activity {
             }
         });
     }
-    private void getdata(){
+    //查询自己手机号下的订单
+    private void getdata(Customer cus){
         final ProgressDialog progressDialog=new ProgressDialog(OrderActivity.this);
         progressDialog.setMessage("加载中。。。");
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
-        String url=getResources().getString(R.string.zhangheng_url)+"Insert_Order";
+        String url=getResources().getString(R.string.zhangheng_url)+"Goods/Insert_Order";
+        String json = new Gson().toJson(cus);
         OkHttpUtils
                 .post()
                 .url(url)
-                .addParams("phone",phone)
+                .addParams("cusInfo",json)
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -122,17 +125,19 @@ public class OrderActivity extends Activity {
                                 @Override
                                 public void myClick1(int position, int num, String submit_id, int goods_id) {
                                     System.out.println(position+"\t"+num+"\t"+submit_id+"\t"+goods_id);
+
                                     switch (position){
                                         case 1://确认收货
                                             if (phone!=null) {
-                                                getOKOrder(num,submit_id,goods_id,phone);
+                                                getOKOrder(num,submit_id,goods_id,phone,password);
+
                                             }else {
                                                 DialogUtil.dialog(OrderActivity.this,"账号为空","账户的电话号码为空");
                                             }
                                             break;
                                         case 2://退货
                                             if (phone!=null) {
-                                                getNoOrder(submit_id,goods_id,phone);
+                                                getNoOrder(num,submit_id,goods_id,phone,password);
                                             }else {
                                                 DialogUtil.dialog(OrderActivity.this,"账号为空","账户的电话号码为空");
                                             }
@@ -159,17 +164,19 @@ public class OrderActivity extends Activity {
                     }
                 });
     }
-    private void getOKOrder(int num, String submit_id, int goods_id ,String phone){
+    //确认收货请求
+    private void getOKOrder(int num, String submit_id, int goods_id ,String phone,String password){
         final ProgressDialog progressDialog=new ProgressDialog(OrderActivity.this);
         progressDialog.setMessage("加载中。。。");
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
-        String url=getResources().getString(R.string.zhangheng_url)+"OK_Order";
+        String url=getResources().getString(R.string.zhangheng_url)+"Goods/OK_Order";
         Map<String,String> map=new HashMap<>();
         map.put("num", String.valueOf(num));
         map.put("submit_id", submit_id);
         map.put("phone", phone);
+        map.put("password", password);
         map.put("goods_id", String.valueOf(goods_id));
         OkHttpUtils
                 .post()
@@ -181,14 +188,15 @@ public class OrderActivity extends Activity {
                     public void onError(Call call, Exception e, int id) {
                         String error = OkHttpMessageUtil.error(e);
                         DialogUtil.dialog(OrderActivity.this,"错误",error);
+                        e.printStackTrace();
                     }
 
                     @Override
                     public void onResponse(String response, int id) {
                         Gson gson = new Gson();
-                        Result resuilt = new Result();
+                        Message msg = new Message();
                         try {
-                            resuilt=gson.fromJson(response, Result.class);
+                            msg=gson.fromJson(response, Message.class);
                         }catch (Exception e){
                             if (OkHttpMessageUtil.response(response)==null){
                                 DialogUtil.dialog(OrderActivity.this,"错误",e.getMessage());
@@ -197,12 +205,12 @@ public class OrderActivity extends Activity {
                             }
                         }
                         progressDialog.dismiss();
-                        if (resuilt!=null){
-                            if (resuilt.getTitle().equals("收货成功")){
-                                DialogUtil.dialog(OrderActivity.this,resuilt.getTitle(),"");
+                        if (msg!=null){
+                            if (msg.getCode()==200){
+                                DialogUtil.dialog(OrderActivity.this,msg.getTitle(),"");
                                 getPreferences();
                             }else {
-                                DialogUtil.dialog(OrderActivity.this,resuilt.getTitle(),resuilt.getMessage());
+                                DialogUtil.dialog(OrderActivity.this,msg.getTitle(),msg.getMessage());
                             }
                         }else {
                             android.app.AlertDialog.Builder d=new android.app.AlertDialog.Builder(OrderActivity.this);
@@ -224,16 +232,19 @@ public class OrderActivity extends Activity {
                 });
     }
 
-    private void getNoOrder(String submit_id, int goods_id ,String phone){
+    //退货请求
+    private void getNoOrder(int num,String submit_id, int goods_id ,String phone,String password){
         final ProgressDialog progressDialog=new ProgressDialog(OrderActivity.this);
         progressDialog.setMessage("加载中。。。");
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
-        String url=getResources().getString(R.string.zhangheng_url)+"NO_Order";
+        String url=getResources().getString(R.string.zhangheng_url)+"Goods/NO_Order";
         Map<String,String> map=new HashMap<>();
+        map.put("num", String.valueOf(num));
         map.put("submit_id", submit_id);
         map.put("phone", phone);
+        map.put("password", password);
         map.put("goods_id", String.valueOf(goods_id));
         OkHttpUtils
                 .post()
@@ -250,9 +261,9 @@ public class OrderActivity extends Activity {
                     @Override
                     public void onResponse(String response, int id) {
                         Gson gson = new Gson();
-                        Result resuilt = new Result();
+                        Message msg = new Message();
                         try {
-                            resuilt=gson.fromJson(response, Result.class);
+                            msg=gson.fromJson(response, Message.class);
                         }catch (Exception e){
                             if (OkHttpMessageUtil.response(response)==null){
                                 DialogUtil.dialog(OrderActivity.this,"错误",e.getMessage());
@@ -261,12 +272,12 @@ public class OrderActivity extends Activity {
                             }
                         }
                         progressDialog.dismiss();
-                        if (resuilt!=null){
-                            if (resuilt.getTitle().equals("退货成功")){
-                                DialogUtil.dialog(OrderActivity.this,resuilt.getTitle(),"");
+                        if (msg!=null){
+                            if (msg.getCode()==200){
+                                DialogUtil.dialog(OrderActivity.this,msg.getTitle(),"");
                                 getPreferences();
                             }else {
-                                DialogUtil.dialog(OrderActivity.this,resuilt.getTitle(),resuilt.getMessage());
+                                DialogUtil.dialog(OrderActivity.this,msg.getTitle(),msg.getMessage());
                             }
                         }else {
                             android.app.AlertDialog.Builder d=new android.app.AlertDialog.Builder(OrderActivity.this);
@@ -300,7 +311,10 @@ public class OrderActivity extends Activity {
         address = preferences.getString("address", null);
 
         if (phone!=null) {
-            getdata();
+            Customer customer = new Customer();
+            customer.setPhone(phone);
+            customer.setPassword(password);
+            getdata(customer);
         }else {
             android.app.AlertDialog.Builder d=new android.app.AlertDialog.Builder(OrderActivity.this);
             d.setTitle("账号为空");

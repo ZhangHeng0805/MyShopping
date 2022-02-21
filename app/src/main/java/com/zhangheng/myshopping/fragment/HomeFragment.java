@@ -41,15 +41,17 @@ import com.amap.api.services.weather.WeatherSearch;
 import com.amap.api.services.weather.WeatherSearchQuery;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.zhangheng.myshopping.WeatherActivity;
 import com.zhangheng.myshopping.R;
+import com.zhangheng.myshopping.WeatherActivity;
 import com.zhangheng.myshopping.adapter.GoodsList_Adapter;
 import com.zhangheng.myshopping.adapter.GoodsMeunList_Adapter;
 import com.zhangheng.myshopping.base.BaseFragment;
+import com.zhangheng.myshopping.bean.Message;
 import com.zhangheng.myshopping.bean.shopping.Goods;
 import com.zhangheng.myshopping.bean.shopping.submitgoods.SubmitGoods;
 import com.zhangheng.myshopping.bean.shopping.submitgoods.goods;
 import com.zhangheng.myshopping.util.DialogUtil;
+import com.zhangheng.myshopping.util.GetPhoneInfo;
 import com.zhangheng.myshopping.util.OkHttpMessageUtil;
 import com.zhangheng.myshopping.util.TimeUtil;
 import com.zhangheng.myshopping.view.RefreshListView;
@@ -59,6 +61,7 @@ import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -138,6 +141,7 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
     public void onResume() {
         super.onResume();
         mapView.onResume();
+        Location(0);
     }
 
     @Override
@@ -173,7 +177,7 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
         if (aMap == null) {
             aMap = mapView.getMap();
         }
-        Location(3);
+        Location(0);
         geocodeSearch = new GeocodeSearch(getContext());
         geocodeSearch.setOnGeocodeSearchListener(this);
         aMap.setOnMyLocationChangeListener(new AMap.OnMyLocationChangeListener() {
@@ -289,7 +293,7 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                     String s=g.get(i).getGoods_name()+" "+g.get(i).getGoods_price()+"元 × "+g.get(i).getNum();
                     strings[i]=s;
                 }
-                strings[g.size()+4]="已选商品："+num+"件:总金额："+pice+"元";
+                strings[g.size()+4]="已选商品："+num+"件;总金额："+pice+"元";
                 if (phone!=null) {
                     strings[g.size() + 3] = "联系电话：" + phone;
                 }else {
@@ -326,8 +330,9 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                             submitGoods.setPhone(phone);
                             if (address!=null&&!address.equals("地址为空")) {
                                 submitGoods.setAddress(address);
-                                submit_id=TimeUtil.getTimeString()+"_"+ UUID.randomUUID().toString().substring(0,8);
-                                submitGoods.setTime(TimeUtil.getSystemTime());
+                                Date date = new Date();
+                                submit_id=TimeUtil.getTimeString(date)+"_"+ UUID.randomUUID().toString().substring(0,8);
+                                submitGoods.setTime(TimeUtil.getSystemTime(date));
                                 submitGoods.setSubmit_id(submit_id);
                                 OkHttp2(submitGoods);
                             }else {
@@ -404,6 +409,7 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                 .post()
                 .url(url)
                 .addParams("GoodsType",type)
+                .addHeader("User-Agent", GetPhoneInfo.getHead(getContext()))
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -450,7 +456,7 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                             main_fragment_home_listview.setVisibility(View.VISIBLE);
                             for (Goods g : goodsList) {
                                 g.setGoods_image(getResources().getString(R.string.zhangheng_url)
-                                        + "downloads/show/" + g.getGoods_image());
+                                        + "fileload/show/" + g.getGoods_image());
                                 g.setNum(0);
                                 if (spinner_list.contains(g.getGoods_type())) {
                                 } else {
@@ -588,7 +594,6 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                     getOkHttp(spinner_list.get(spinner_position));
                     close_meun();
                     clear_meun();
-
                 }
             });
             d.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -646,29 +651,26 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                     @Override
                     public void onResponse(String response, int id) {
                         Log.d(TAG, "onResponse: "+response);
-                        progressDialog1.dismiss();
-                        if (response.equals("成功")){
-                            AlertDialog.Builder d=new AlertDialog.Builder(getContext());
-                            d.setTitle("订单提交成功");
-                            d.setMessage("订单编号："+submit_id+"\t\n本次消费："+pice+"元"+"\t\n请前往\"我的\"-\"订单列表\"进行查看订单");
-                            d.setPositiveButton("知道了", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    clear_meun();
-                                    getOkHttp(spinner_list.get(spinner_position));
-                                }
-                            });
-                            d.show();
+                        if (response!=null) {
+                            Message msg = new Gson().fromJson(response, Message.class);
+                            progressDialog1.dismiss();
+                            if (msg.getCode()==200) {
+                                AlertDialog.Builder d = new AlertDialog.Builder(getContext());
+                                d.setTitle("订单提交成功");
+                                d.setMessage("订单编号：" + submit_id + "\t\n本次消费：" + pice + "元" + "\t\n请前往\"我的\"-\"订单列表\"进行查看订单");
+                                d.setPositiveButton("知道了", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        clear_meun();
+                                        getOkHttp(spinner_list.get(spinner_position));
+                                    }
+                                });
+                                d.show();
+                            } else {
+                                DialogUtil.dialog(getContext(),msg.getTitle(),msg.getMessage());
+                            }
                         }else {
-                            AlertDialog.Builder d=new AlertDialog.Builder(getContext());
-                            d.setTitle("订单提交失败");
-                            d.setMessage("消费金额异常！请重试");
-                            d.setPositiveButton("知道了", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                }
-                            });
-                            d.show();
+                            DialogUtil.dialog(getContext(),"返回null","服务器返回数据为空");
                         }
                     }
                 });

@@ -3,14 +3,20 @@ package com.zhangheng.myshopping.bean.location;
 
 
 public class ShareLocation {
-
-    private String username;
-
+    private String phone;//手机号
+    private String username;//用户名
     private String latitude;//经度
-
     private String longitude;//纬度
     private String time;//时间
     private String state;//状态
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
     public String getUsername() {
         return username;

@@ -50,6 +50,7 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.Call;
@@ -71,7 +72,7 @@ public class ShareLocationActivity extends Activity implements View.OnClickListe
     private static final int PERMISSON_REQUESTCODE = 0;
      // 判断是否需要检测，防止不停的弹框
     private boolean isNeedCheck = true;
-    private String username=null;
+    private String username=null,phone;
     private  double latitude=0,longitude=0;
     private WeatherSearchQuery mquery;
     private WeatherSearch mweathersearch;
@@ -109,6 +110,7 @@ public class ShareLocationActivity extends Activity implements View.OnClickListe
 
         Intent intent=getIntent();
         username = intent.getStringExtra("name");
+        phone = intent.getStringExtra("phone");
 
         checkPermission();
 
@@ -160,6 +162,7 @@ public class ShareLocationActivity extends Activity implements View.OnClickListe
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 switch (i){
                     case R.id.m12_rb_01:
+                        //标准样式
                         aMap.setMapType(AMap.MAP_TYPE_NORMAL);
                         m12_LL_mapstyle.setBackgroundColor(getResources().getColor(R.color.black_10));
                         m12_btn_locationtype.setBackgroundColor(getResources().getColor(R.color.black_10));
@@ -168,6 +171,7 @@ public class ShareLocationActivity extends Activity implements View.OnClickListe
                         m12_btn_refresh.setBackgroundColor(getResources().getColor(R.color.black_10));
                         break;
                     case R.id.m12_rb_02:
+                        //夜间样式
                         aMap.setMapType(AMap.MAP_TYPE_NIGHT);
                         m12_LL_mapstyle.setBackgroundColor(getResources().getColor(R.color.white_50));
                         m12_btn_locationtype.setBackgroundColor(getResources().getColor(R.color.white_50));
@@ -176,6 +180,7 @@ public class ShareLocationActivity extends Activity implements View.OnClickListe
                         m12_btn_refresh.setBackgroundColor(getResources().getColor(R.color.white_50));
                         break;
                     case R.id.m12_rb_03:
+                        //卫星样式
                         aMap.setMapType(AMap.MAP_TYPE_SATELLITE);
                         m12_LL_mapstyle.setBackgroundColor(getResources().getColor(R.color.white_50));
                         m12_btn_locationtype.setBackgroundColor(getResources().getColor(R.color.white_50));
@@ -184,6 +189,7 @@ public class ShareLocationActivity extends Activity implements View.OnClickListe
                         m12_btn_refresh.setBackgroundColor(getResources().getColor(R.color.white_50));
                         break;
                     case R.id.m12_rb_04:
+                        //导航样式
                         aMap.setMapType(AMap.MAP_TYPE_NAVI);
                         m12_LL_mapstyle.setBackgroundColor(getResources().getColor(R.color.black_10));
                         m12_btn_locationtype.setBackgroundColor(getResources().getColor(R.color.black_10));
@@ -375,7 +381,8 @@ public class ShareLocationActivity extends Activity implements View.OnClickListe
                 } else {
                     aMap.clear();
                 }
-                String time=TimeUtil.getSystemTime();
+                String time=TimeUtil.getSystemTime(new Date());
+                location1.setPhone(phone);
                 location1.setUsername(username);
                 location1.setLatitude(String.valueOf(latitude));
                 location1.setLongitude(String.valueOf(longitude));
@@ -394,7 +401,8 @@ public class ShareLocationActivity extends Activity implements View.OnClickListe
                 } else {
                     aMap.clear();
                 }
-                String time=TimeUtil.getSystemTime();
+                String time=TimeUtil.getSystemTime(new Date());
+                location1.setPhone(phone);
                 location1.setUsername(username);
                 location1.setLatitude(String.valueOf(latitude));
                 location1.setLongitude(String.valueOf(longitude));
@@ -540,19 +548,16 @@ public class ShareLocationActivity extends Activity implements View.OnClickListe
         }
     }
 
-
-
+    //发送共享位置请求
     private void locationList(ShareLocation location){
         List<ShareLocation> list=new ArrayList<>();
-        String url=getResources().getString(R.string.zhangheng_url)+"location";
+        String url=getResources().getString(R.string.zhangheng_url)+"Customer/share_location";
+        Gson gson = new Gson();
+        String json = gson.toJson(location);
         OkHttpUtils
                 .post()
                 .url(url)
-                .addParams("username",location.getUsername())
-                .addParams("latitude",location.getLatitude())
-                .addParams("longitude",location.getLongitude())
-                .addParams("time",location.getTime())
-                .addParams("state",location.getState())
+                .addParams("location",json)
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -632,14 +637,13 @@ public class ShareLocationActivity extends Activity implements View.OnClickListe
         }else {
             if (i==1200){
                 Toast.makeText(ShareLocationActivity.this, "请检查定位服务是否开启", Toast.LENGTH_SHORT).show();
-            }else if (1==1804){
+            }else if (i==1804){
                 Toast.makeText(ShareLocationActivity.this, "请检查网络连接是否畅通", Toast.LENGTH_SHORT).show();
-            }else if (1==1806){
+            }else if (i==1806){
                 Toast.makeText(ShareLocationActivity.this, "请检查网络状况以及网络的稳定性", Toast.LENGTH_SHORT).show();
-            }else if (1==1802){
+            }else if (i==1802){
                 Toast.makeText(ShareLocationActivity.this, "请先检查网络状况是否良好", Toast.LENGTH_SHORT).show();
             }
-
             else {
                 Toast.makeText(ShareLocationActivity.this, "天气错误：" + i, Toast.LENGTH_SHORT).show();
             }

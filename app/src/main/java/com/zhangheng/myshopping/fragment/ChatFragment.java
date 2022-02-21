@@ -29,6 +29,7 @@ import com.zhangheng.myshopping.base.BaseFragment;
 import com.zhangheng.myshopping.bean.chat.ChatConfig;
 import com.zhangheng.myshopping.bean.chat.ChatInfo;
 import com.zhangheng.myshopping.util.DialogUtil;
+import com.zhangheng.myshopping.util.GetPhoneInfo;
 import com.zhangheng.myshopping.util.OkHttpMessageUtil;
 import com.zhangheng.myshopping.util.TimeUtil;
 import com.zhangheng.zh.Resuilt;
@@ -36,6 +37,7 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.netty.bootstrap.Bootstrap;
@@ -100,13 +102,13 @@ public class ChatFragment extends BaseFragment {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case MSG_CONNECT:
+                    case MSG_CONNECT://服务器连接
                         Toast.makeText(getContext(), "服务器连接成功", Toast.LENGTH_SHORT).show();
                         main_chatfragment_txt_title.setText("聊天室已连接");
                         main_chatfragment_txt_title.setTextColor(getResources().getColor(R.color.white));
                         sendOnline();
                         break;
-                    case MSG_RECEIVE:
+                    case MSG_RECEIVE://消息接收
                         Bundle data = msg.getData();
                         String dataStr = data.getString(DATA_RECEIVE);
                         Log.d(TAG, "handleMessage: "+dataStr);
@@ -190,6 +192,11 @@ public class ChatFragment extends BaseFragment {
                         Bundle data1 = msg.getData();
                         String dataStr1 = data1.getString(DATA_TITLE);
                         Toast.makeText(getContext(), dataStr1, Toast.LENGTH_SHORT).show();
+                        switch (dataStr1){
+                            case "服务器连接拒绝(服务器可能没开，或者防火墙拦截)":
+                                main_chatfragment_txt_title.setText("服务器连接失败");main_chatfragment_txt_title.setTextColor(getResources().getColor(R.color.red));
+                                break;
+                        }
                         break;
                 }
             }
@@ -226,7 +233,7 @@ public class ChatFragment extends BaseFragment {
                                 chatInfo.setTo(to);
                                 chatInfo.setTo_name(to_name);
                                 chatInfo.setMessage(info);
-                                chatInfo.setTime(TimeUtil.getSystemTime());
+                                chatInfo.setTime(TimeUtil.getSystemTime(new Date()));
                                 String json = gson.toJson(chatInfo);
                                 mSocketThread.sendMessage(json);
                                 main_chatfragment_et_message.setText("");
@@ -300,6 +307,7 @@ public class ChatFragment extends BaseFragment {
                     if (name!=null) {
                         Intent intent = new Intent();
                         intent.putExtra("name",name);
+                        intent.putExtra("phone",phone);
                         intent.setClass(getContext(), ShareLocationActivity.class);
                         startActivity(intent);
                     }else {
@@ -338,7 +346,7 @@ public class ChatFragment extends BaseFragment {
     private void sendOnline(){
         Gson gson = new Gson();
         ChatInfo Info = new ChatInfo();
-        Info.setTime(TimeUtil.getSystemTime());
+        Info.setTime(TimeUtil.getSystemTime(new Date()));
         Info.setTo("all");
         Info.setChatType(1);
         Info.setMsgType(1);
@@ -355,7 +363,7 @@ public class ChatFragment extends BaseFragment {
     private void sendOffline(){
         Gson gson = new Gson();
         ChatInfo Info = new ChatInfo();
-        Info.setTime(TimeUtil.getSystemTime());
+        Info.setTime(TimeUtil.getSystemTime(new Date()));
         Info.setTo("all");
         Info.setTo_name("全部");
         Info.setChatType(1);
@@ -367,6 +375,7 @@ public class ChatFragment extends BaseFragment {
         mSocketThread.sendMessage(json);
     }
 
+    //选择聊天对象
     private void chooseChatObject(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("请选择你的聊天对象：");
@@ -431,6 +440,7 @@ public class ChatFragment extends BaseFragment {
         AlertDialog dialog = builder.create();  //创建AlertDialog对象
         dialog.show();                           //显示对话框
     }
+    //离开聊天
     private void exitChat(){
         if (mChannel!=null) {
             if (mChannel.isActive()) {
@@ -483,10 +493,12 @@ public class ChatFragment extends BaseFragment {
         progressDialog.setCancelable(false);
         progressDialog.show();
         String url=getResources().getString(R.string.zhangheng_url)+"config/chatconfig";
+
         OkHttpUtils
                 .get()
                 .url(url)
-                .addParams("port","2")
+                .addHeader("User-Agent",GetPhoneInfo.getHead(getContext()))
+                .addParams("port",getResources().getString(R.string.chat_local_port))//聊天服务器的本地端口
                 .build()
                 .execute(new StringCallback() {
                     @Override

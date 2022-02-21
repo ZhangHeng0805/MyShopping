@@ -20,6 +20,8 @@ public class Customer {
 
     private String time;//注册时间
 
+    private int state;//账号状态
+
     public String getPhone() {
         return phone;
     }
@@ -76,6 +78,14 @@ public class Customer {
         this.time = time;
     }
 
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
     @Override
     public String toString() {
         return "Customer{" +
@@ -86,6 +96,7 @@ public class Customer {
                 ", icon='" + icon + '\'' +
                 ", address='" + address + '\'' +
                 ", time='" + time + '\'' +
+                ", state=" + state +
                 '}';
     }
 }

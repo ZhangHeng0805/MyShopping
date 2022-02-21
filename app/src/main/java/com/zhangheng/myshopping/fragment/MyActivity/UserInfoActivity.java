@@ -26,19 +26,19 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.zhangheng.myshopping.R;
-import com.zhangheng.myshopping.bean.Result;
+import com.zhangheng.myshopping.bean.Message;
 import com.zhangheng.myshopping.bean.shopping.Customer;
 import com.zhangheng.myshopping.util.DialogUtil;
 import com.zhangheng.myshopping.util.OkHttpMessageUtil;
+import com.zhangheng.myshopping.util.TimeUtil;
 import com.zhangheng.zh.ASCII;
 import com.zhangheng.zh.Resuilt;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.Call;
 
@@ -99,7 +99,11 @@ public class UserInfoActivity extends Activity {
                         if (value.length()>0&&value.length()<=10) {
                             if (!value.equals(name)) {
                                 Log.d("修改用户名", "onClick: " + value);
-                                setUserName(value);
+                                Customer customer = new Customer();
+                                customer.setPhone(phone);
+                                customer.setPassword(password);
+                                customer.setUsername(value);
+                                setUserName(customer);//修改用户名
                             }else {
                                 dialog("用户名相同","新的用户名不能和旧的用户名相同");
                             }
@@ -150,7 +154,11 @@ public class UserInfoActivity extends Activity {
                 alert.setCancelable(false);
                 alert.setPositiveButton("是的", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        setIcon(icon);
+                        Customer customer = new Customer();
+                        customer.setPhone(phone);
+                        customer.setPassword(password);
+                        customer.setIcon(icon);
+                        setIcon(customer);//修改头像
                     }
                 });
                 alert.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -194,7 +202,11 @@ public class UserInfoActivity extends Activity {
                                     if (new_pwd.equals(new_pwd1)) {
                                         if (!old_pwd.equals(new_pwd)) {
                                             if (old_pwd.equals(password)) {
-                                                setPassword(new_pwd);
+                                                Customer customer = new Customer();
+                                                customer.setPhone(phone);
+                                                customer.setPassword(new_pwd);//设置新密码
+                                                customer.setUsername(name);
+                                                setPassword(customer);
                                                 dialog.dismiss();
                                             } else {
                                                 Toast.makeText(UserInfoActivity.this, "旧密码输入错误", Toast.LENGTH_SHORT).show();
@@ -234,6 +246,7 @@ public class UserInfoActivity extends Activity {
         preferences = getSharedPreferences("customeruser", MODE_PRIVATE);
         phone = preferences.getString("phone", null);
         name=preferences.getString("name",null);
+        userinfo_txt_username.setText(name);
         password = preferences.getString("password", null);
         if (password!=null) {
             Resuilt resuilt = new Resuilt(password, 3);    //密码解密
@@ -242,20 +255,20 @@ public class UserInfoActivity extends Activity {
         address = preferences.getString("address", null);
     }
 
-    private void getUser(){
+    //获取账号信息
+    private void getUser(Customer cus){
         final ProgressDialog progressDialog=new ProgressDialog(UserInfoActivity.this);
         progressDialog.setMessage("刷新中。。。");
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
         String url=getResources().getString(R.string.zhangheng_url)+"Customer/getCustomer";
-        Map<String,String> map=new HashMap<>();
-        map.put("username",phone);
-        map.put("password",password);
+        Gson gson = new Gson();
+        String json = gson.toJson(cus);
         OkHttpUtils
                 .post()
                 .url(url)
-                .params(map)
+                .addParams("customerJson",json)
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -281,22 +294,39 @@ public class UserInfoActivity extends Activity {
                     @Override
                     public void onResponse(String response, int id) {
                         Gson gson = new Gson();
-                        try {
-                            customer = gson.fromJson(response, Customer.class);
-                        }catch (Exception e){
-                            if (OkHttpMessageUtil.response(response)==null){
-                                DialogUtil.dialog(UserInfoActivity.this,"错误",e.getMessage());
-                            }else {
-                                DialogUtil.dialog(UserInfoActivity.this,"错误",OkHttpMessageUtil.response(response));
-                            }
-                        }
                         progressDialog.dismiss();
+                        if (response!=null) {
+                            try {
+                                customer = gson.fromJson(response, Customer.class);
+                            } catch (Exception e) {
+                                if (OkHttpMessageUtil.response(response) == null) {
+                                    DialogUtil.dialog(UserInfoActivity.this, "错误", e.getMessage());
+                                } else {
+                                    DialogUtil.dialog(UserInfoActivity.this, "错误", OkHttpMessageUtil.response(response));
+                                }
+                            }
+                        }else {
+                            android.app.AlertDialog.Builder d=new android.app.AlertDialog.Builder(UserInfoActivity.this);
+                            d.setTitle("用户信息没有找到");
+                            d.setMessage("");
+                            d.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                }
+                            }).setPositiveButton("退出", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    finish();
+                                }
+                            });
+                            d.show();
+                        }
                         if (customer!=null){
                             int i = iconlist.indexOf(customer.getIcon());
                             if (i>=0){
                                 userinfo_sp_usericon.setSelection(i);
                             }
-                            userinfo_txt_time.setText(customer.getTime().substring(0,customer.getTime().indexOf(" ")));
+                            userinfo_txt_time.setText("已注册："+ TimeUtil.daysDifference(TimeUtil.getSystemTime(new Date()),customer.getTime())+"天");
                             userinfo_txt_username.setText(customer.getUsername());
 
                         }else {
@@ -320,13 +350,14 @@ public class UserInfoActivity extends Activity {
                 });
 
     }
+    //获取头像列表
     private void getImage(){
         final ProgressDialog progressDialog=new ProgressDialog(UserInfoActivity.this);
         progressDialog.setMessage("刷新中。。。");
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
-        String url=getResources().getString(R.string.zhangheng_url)+"RegisterCustomer/customericonlist";
+        String url=getResources().getString(R.string.zhangheng_url)+"Customer/customericonlist";
         OkHttpUtils
                 .get()
                 .url(url)
@@ -365,9 +396,12 @@ public class UserInfoActivity extends Activity {
                         List<String> data=new ArrayList<>();
                         progressDialog.dismiss();
                         if (iconlist!=null) {
-                            getUser();
+                            Customer customer = new Customer();
+                            customer.setPhone(phone);
+                            customer.setPassword(password);
+                            getUser(customer);
                             for (String s : iconlist) {
-                                data.add(getResources().getString(R.string.zhangheng_url) + "downloads/show/" + s);
+                                data.add(getResources().getString(R.string.zhangheng_url) + "fileload/show/" + s);
                             }
 
                             ImageAdapter imageAdapter = new ImageAdapter(getApplicationContext(), data);
@@ -390,20 +424,20 @@ public class UserInfoActivity extends Activity {
                     }
                 });
     }
-    private void setUserName(String username){
+    //修改用户名
+    private void setUserName(Customer cus){
         final ProgressDialog progressDialog=new ProgressDialog(UserInfoActivity.this);
         progressDialog.setMessage("修改中。。。");
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
         String url=getResources().getString(R.string.zhangheng_url)+"Customer/updateUsername";
-        Map<String,String> map=new HashMap<>();
-        map.put("username",phone);
-        map.put("password",username);
+        Gson gson = new Gson();
+        String json = gson.toJson(cus);
         OkHttpUtils
                 .post()
                 .url(url)
-                .params(map)
+                .addParams("customerJSON",json)
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -429,9 +463,9 @@ public class UserInfoActivity extends Activity {
                     @Override
                     public void onResponse(String response, int id) {
                         Gson gson = new Gson();
-                        Result resuilt = new Result();
+                        Message msg = new Message();
                         try {
-                            resuilt = gson.fromJson(response, Result.class);
+                            msg = gson.fromJson(response, Message.class);
                         }catch (Exception e){
                             if (OkHttpMessageUtil.response(response)==null){
                                 DialogUtil.dialog(UserInfoActivity.this,"错误",e.getMessage());
@@ -440,16 +474,16 @@ public class UserInfoActivity extends Activity {
                             }
                         }
                         progressDialog.dismiss();
-                        if (resuilt!=null){
-                           if (resuilt.getTitle().equals("用户名修改成功")){
-                               dialog(resuilt.getTitle(),"恭喜 "+resuilt.getMessage()+" 喜得新名字！");
+                        if (msg!=null){
+                           if (msg.getCode()==200){
+                               dialog(msg.getTitle(),"恭喜 "+msg.getMessage()+" 喜得新名字！");
                                SharedPreferences sharedPreferences=getSharedPreferences("customeruser", MODE_PRIVATE);
                                SharedPreferences.Editor editor=sharedPreferences.edit();
-                               editor.putString("name",resuilt.getMessage());
+                               editor.putString("name",msg.getMessage());
                                editor.commit();
                                getPreferences();
                            }else {
-                               dialog(resuilt.getTitle(),resuilt.getMessage());
+                               dialog(msg.getTitle(),msg.getMessage());
                            }
                         }else {
                             android.app.AlertDialog.Builder d=new android.app.AlertDialog.Builder(UserInfoActivity.this);
@@ -471,20 +505,20 @@ public class UserInfoActivity extends Activity {
                     }
                 });
     }
-    private void setIcon(String myicon){
+    //修改用户头像
+    private void setIcon(Customer customer){
         final ProgressDialog progressDialog=new ProgressDialog(UserInfoActivity.this);
         progressDialog.setMessage("修改中。。。");
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
         String url=getResources().getString(R.string.zhangheng_url)+"Customer/updateIcon";
-        Map<String,String> map=new HashMap<>();
-        map.put("username",phone);
-        map.put("password",myicon);
+        Gson gson = new Gson();
+        String json = gson.toJson(customer);
         OkHttpUtils
                 .post()
                 .url(url)
-                .params(map)
+                .addParams("cus",json)
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -510,9 +544,9 @@ public class UserInfoActivity extends Activity {
                     @Override
                     public void onResponse(String response, int id) {
                         Gson gson = new Gson();
-                        Result resuilt = new Result();
+                        Message msg = new Message();
                         try {
-                            resuilt = gson.fromJson(response, Result.class);
+                            msg = gson.fromJson(response, Message.class);
                         }catch (Exception e){
                             if (OkHttpMessageUtil.response(response)==null){
                                 DialogUtil.dialog(UserInfoActivity.this,"错误",e.getMessage());
@@ -521,13 +555,13 @@ public class UserInfoActivity extends Activity {
                             }
                         }
                         progressDialog.dismiss();
-                        if (resuilt!=null){
-                            if (resuilt.getTitle().equals("头像修改成功")){
-                                dialog(resuilt.getTitle(),"恭喜 "+name+" 喜得新头像！");
-                                userinfo_sp_usericon.setSelection(iconlist.indexOf(resuilt.getMessage()));
+                        if (msg!=null){
+                            if (msg.getCode()==200){
+                                dialog(msg.getTitle(),"恭喜 "+name+" 喜得新头像！");
+                                userinfo_sp_usericon.setSelection(iconlist.indexOf(msg.getMessage()));
                                 userinfo_btn_usericon.setVisibility(View.GONE);
                             }else {
-                                dialog(resuilt.getTitle(),resuilt.getMessage());
+                                dialog(msg.getTitle(),msg.getMessage());
                             }
                         }else {
                             android.app.AlertDialog.Builder d=new android.app.AlertDialog.Builder(UserInfoActivity.this);
@@ -550,20 +584,21 @@ public class UserInfoActivity extends Activity {
                 });
 
     }
-    private void setPassword(String mypassword){
+
+    //修改用户密码
+    private void setPassword(Customer customer){
         final ProgressDialog progressDialog=new ProgressDialog(UserInfoActivity.this);
         progressDialog.setMessage("修改中。。。");
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
         String url=getResources().getString(R.string.zhangheng_url)+"Customer/updatePassWord";
-        Map<String,String> map=new HashMap<>();
-        map.put("username",phone);
-        map.put("password",mypassword);
+        Gson gson = new Gson();
+        String json = gson.toJson(customer);
         OkHttpUtils
                 .post()
                 .url(url)
-                .params(map)
+                .addParams("json",json)
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -589,9 +624,9 @@ public class UserInfoActivity extends Activity {
                     @Override
                     public void onResponse(String response, int id) {
                         Gson gson = new Gson();
-                        Result resuilt = new Result();
+                        Message msg = new Message();
                         try {
-                            resuilt = gson.fromJson(response, Result.class);
+                            msg = gson.fromJson(response, Message.class);
                         }catch (Exception e){
                             if (OkHttpMessageUtil.response(response)==null){
                                 DialogUtil.dialog(UserInfoActivity.this,"错误",e.getMessage());
@@ -600,17 +635,17 @@ public class UserInfoActivity extends Activity {
                             }
                         }
                         progressDialog.dismiss();
-                        if (resuilt!=null){
-                            if (resuilt.getTitle().equals("密码修改成功")){
+                        if (msg!=null){
+                            if (msg.getCode()==200){
                                 dialog("密码修改成功","请牢记新的密码！");
                                 SharedPreferences sharedPreferences=getSharedPreferences("customeruser", MODE_PRIVATE);
                                 SharedPreferences.Editor editor=sharedPreferences.edit();
-                                ASCII ascii = new ASCII(resuilt.getMessage(), 3);
+                                ASCII ascii = new ASCII(msg.getMessage(), 3);
                                 editor.putString("password",ascii.getresuilt());
                                 editor.commit();
                                 getPreferences();
                             }else {
-                                dialog(resuilt.getTitle(),resuilt.getMessage());
+                                dialog(msg.getTitle(),msg.getMessage());
                             }
                         }else {
                             android.app.AlertDialog.Builder d=new android.app.AlertDialog.Builder(UserInfoActivity.this);
