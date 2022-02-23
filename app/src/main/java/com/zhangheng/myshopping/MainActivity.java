@@ -205,13 +205,15 @@ public class MainActivity extends FragmentActivity {
 //                                m3_tv_service.setTextColor(getColor(R.color.black));
                                 if (msg.getCode()==200) {
                                     if (msg.getTitle().equals(getResources().getString(R.string.app_name))) {
-                                        sharedPreferences = getSharedPreferences("update", MODE_PRIVATE);
+                                        sharedPreferences = getSharedPreferences("乐购update", MODE_PRIVATE);
                                         String urlname = sharedPreferences.getString("urlname", "");
                                         if (!urlname.equals(msg.getMessage())) {
-                                            if (!versionCode.equals(appversion(msg.getMessage())))
+                                            //如果版本不一致则提示更细
+                                            if (!versionCode.equals(appversion(msg.getMessage()))){
                                                 showUpdate(msg.getMessage());
+                                            }
                                         } else {
-                                            Log.d("urlname", "urlname与更新地址一致");
+                                            Log.d("忽略更新", "urlname与更新地址一致");
                                         }
                                     } else {
                                         Log.d("title", "title与应用的名称不一致");

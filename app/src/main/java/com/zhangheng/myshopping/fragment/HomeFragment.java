@@ -434,7 +434,6 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                         main_fragment_home_listview.setVisibility(View.GONE);
                         main_fragment_home_txt_notic.setVisibility(View.VISIBLE);
                     }
-
                     @Override
                     public void onResponse(String response, int id) {
                         progressDialog.dismiss();

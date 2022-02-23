@@ -186,14 +186,15 @@ public class MyFragment extends BaseFragment {
                                        SharedPreferences sharedPreferences = getContext().getSharedPreferences("乐购update", MODE_PRIVATE);
                                         String urlname = sharedPreferences.getString("urlname", "");
                                         if (!urlname.equals(msg.getMessage())) {
+                                            //如果版本不一致则提示更细
                                             if (!versionCode.equals(appversion(msg.getMessage()))) {
                                                 showUpdate(msg.getMessage());
                                             }else {
-                                                DialogUtil.dialog(getContext(),"最新版本："+msg.getMessage(),"当前应用已经是最新版本了");
+                                                DialogUtil.dialog(getContext(),"当前应用已经是最新版本了","最新版本："+msg.getMessage());
                                             }
                                         } else {
-                                            Log.d("urlname", "urlname与更新地址一致");
-                                            DialogUtil.dialog(getContext(),"忽略更新版本："+urlname,"你已经选择忽略此版本的更新");
+                                            Log.d("忽略更新", "urlname与更新地址一致");
+                                            DialogUtil.dialog(getContext(),"你已经选择忽略更新","你已经选择忽略此["+urlname.substring(urlname.indexOf("_")+1,urlname.lastIndexOf("."))+"]版本的更新");
 
                                         }
                                     } else {
