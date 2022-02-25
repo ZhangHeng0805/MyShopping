@@ -3,17 +3,25 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#2196F3</color>
+    <color name="white_10">#1AFFFFFF</color>
     <color name="white_50">#80ffffff</color>
     <color name="white_80">#CCFFFFFF</color>
     <color name="white">#ffffff</color>
     <color name="black_50">#80000000</color>
+    <color name="black_80">#CC000000</color>
     <color name="black_10">#1A000000</color>
     <color name="black">#000000</color>
     <color name="blue">#03A9F4</color>
+    <color name="skyblue">#00BFFF</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="red">#F44336</color>
     <color name="yellow">#FF9800</color>
     <color name="bg_1">#CDDC39</color>
     <color name="gray">#EEEEEE</color>
     <color name="green">#11E700</color>
+    <color name="cyan">#00FFFF</color>
+    <color name="mediumpurple">#7B68EE</color>
+    <color name="purple">#800080</color>
+    <color name="pink">#FFC0CB</color>
+    <color name="orange">#FFA500</color>
 </resources>

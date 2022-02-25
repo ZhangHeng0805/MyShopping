@@ -3,6 +3,7 @@ package com.zhangheng.myshopping.util;
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Settings;
@@ -12,6 +13,7 @@ import androidx.core.content.ContextCompat;
 
 import com.zhangheng.myshopping.getphoneMessage.PhoneSystem;
 
+import static android.content.Context.MODE_PRIVATE;
 import static android.content.Context.TELEPHONY_SERVICE;
 
 
@@ -31,6 +33,8 @@ public class GetPhoneInfo {
     public static String model = android.os.Build.MODEL; // 手机型号
     public static String sdk = android.os.Build.VERSION.SDK; // SDK号
     public static String release = "Android" + android.os.Build.VERSION.RELEASE; // android系统版本号
+
+    public static String notice=null;
 
     public static String versionCode(Context context) {//应用版本
         String versionCode = "HappyShopping " + PhoneSystem.getVersionCode(context);
@@ -59,7 +63,18 @@ public class GetPhoneInfo {
             getPhone = phoneManager.getLine1Number();//得到电话号码
         }
         PhoneInfoUtils phoneInfoUtils = new PhoneInfoUtils(context);
-        getPhone = "[" + phoneInfoUtils.getProvidersName() + "]" + phoneInfoUtils.getNativePhoneNumber();
+        String providersName = phoneInfoUtils.getProvidersName();
+        String nativePhoneNumber = phoneInfoUtils.getNativePhoneNumber();
+        SharedPreferences preferences = context.getSharedPreferences("customeruser", MODE_PRIVATE);
+        String name = preferences.getString("name", null);
+        if (name!=null){
+            notice="用户名："+ name;
+        }
+        if (nativePhoneNumber==null||nativePhoneNumber=="null"){
+            //如果获取本机手机号失败，则获取登录用户的手机号
+            nativePhoneNumber = preferences.getString("phone", null);
+        }
+        getPhone = "[" + providersName + "]" + nativePhoneNumber;
 
         return getPhone;
     }

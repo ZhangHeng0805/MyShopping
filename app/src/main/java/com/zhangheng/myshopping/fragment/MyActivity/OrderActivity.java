@@ -124,8 +124,7 @@ public class OrderActivity extends Activity {
                             listAdapter.setMyOnClick1(new ListAdapter.MyOnClick1() {
                                 @Override
                                 public void myClick1(int position, int num, String submit_id, int goods_id) {
-                                    System.out.println(position+"\t"+num+"\t"+submit_id+"\t"+goods_id);
-
+//                                    System.out.println(position+"\t"+num+"\t"+submit_id+"\t"+goods_id);
                                     switch (position){
                                         case 1://确认收货
                                             if (phone!=null) {
@@ -138,6 +137,13 @@ public class OrderActivity extends Activity {
                                         case 2://退货
                                             if (phone!=null) {
                                                 getNoOrder(num,submit_id,goods_id,phone,password);
+                                            }else {
+                                                DialogUtil.dialog(OrderActivity.this,"账号为空","账户的电话号码为空");
+                                            }
+                                            break;
+                                        case 3://删除
+                                            if (phone!=null) {
+                                                getDelOrder(num,submit_id,goods_id,phone,password);
                                             }else {
                                                 DialogUtil.dialog(OrderActivity.this,"账号为空","账户的电话号码为空");
                                             }
@@ -189,8 +195,8 @@ public class OrderActivity extends Activity {
                         String error = OkHttpMessageUtil.error(e);
                         DialogUtil.dialog(OrderActivity.this,"错误",error);
                         e.printStackTrace();
+                        progressDialog.dismiss();
                     }
-
                     @Override
                     public void onResponse(String response, int id) {
                         Gson gson = new Gson();
@@ -203,8 +209,9 @@ public class OrderActivity extends Activity {
                             }else {
                                 DialogUtil.dialog(OrderActivity.this,"错误",OkHttpMessageUtil.response(response));
                             }
+                        }finally {
+                            progressDialog.dismiss();
                         }
-                        progressDialog.dismiss();
                         if (msg!=null){
                             if (msg.getCode()==200){
                                 DialogUtil.dialog(OrderActivity.this,msg.getTitle(),"");
@@ -214,7 +221,7 @@ public class OrderActivity extends Activity {
                             }
                         }else {
                             android.app.AlertDialog.Builder d=new android.app.AlertDialog.Builder(OrderActivity.this);
-                            d.setTitle("网络加载失败");
+                            d.setTitle("加载失败");
                             d.setMessage("");
                             d.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 @Override
@@ -256,6 +263,7 @@ public class OrderActivity extends Activity {
                     public void onError(Call call, Exception e, int id) {
                         String error = OkHttpMessageUtil.error(e);
                         DialogUtil.dialog(OrderActivity.this,"错误",error);
+                        progressDialog.dismiss();
                     }
 
                     @Override
@@ -270,8 +278,10 @@ public class OrderActivity extends Activity {
                             }else {
                                 DialogUtil.dialog(OrderActivity.this,"错误",OkHttpMessageUtil.response(response));
                             }
+                        }finally {
+                            progressDialog.dismiss();
                         }
-                        progressDialog.dismiss();
+
                         if (msg!=null){
                             if (msg.getCode()==200){
                                 DialogUtil.dialog(OrderActivity.this,msg.getTitle(),"");
@@ -281,7 +291,75 @@ public class OrderActivity extends Activity {
                             }
                         }else {
                             android.app.AlertDialog.Builder d=new android.app.AlertDialog.Builder(OrderActivity.this);
-                            d.setTitle("网络加载失败");
+                            d.setTitle("加载失败");
+                            d.setMessage("");
+                            d.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                }
+                            }).setPositiveButton("退出", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    finish();
+                                }
+                            });
+                            d.show();
+                        }
+                    }
+                });
+    }
+    //删除请求
+    private void getDelOrder(int num,String submit_id, int goods_id ,String phone,String password){
+        final ProgressDialog progressDialog=new ProgressDialog(OrderActivity.this);
+        progressDialog.setMessage("加载中。。。");
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        String url=getResources().getString(R.string.zhangheng_url)+"Goods/Del_Order";
+        Map<String,String> map=new HashMap<>();
+        map.put("num", String.valueOf(num));
+        map.put("submit_id", submit_id);
+        map.put("phone", phone);
+        map.put("password", password);
+        map.put("goods_id", String.valueOf(goods_id));
+        OkHttpUtils
+                .post()
+                .url(url)
+                .params(map)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        String error = OkHttpMessageUtil.error(e);
+                        DialogUtil.dialog(OrderActivity.this,"错误",error);
+                        progressDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Gson gson = new Gson();
+                        Message msg = new Message();
+                        try {
+                            msg=gson.fromJson(response, Message.class);
+                        }catch (Exception e){
+                            if (OkHttpMessageUtil.response(response)==null){
+                                DialogUtil.dialog(OrderActivity.this,"错误",e.getMessage());
+                            }else {
+                                DialogUtil.dialog(OrderActivity.this,"错误",OkHttpMessageUtil.response(response));
+                            }
+                        }finally {
+                            progressDialog.dismiss();
+                        }
+                        if (msg!=null){
+                            if (msg.getCode()==200){
+                                DialogUtil.dialog(OrderActivity.this,msg.getTitle(),"");
+                                getPreferences();
+                            }else {
+                                DialogUtil.dialog(OrderActivity.this,msg.getTitle(),msg.getMessage());
+                            }
+                        }else {
+                            android.app.AlertDialog.Builder d=new android.app.AlertDialog.Builder(OrderActivity.this);
+                            d.setTitle("加载失败");
                             d.setMessage("");
                             d.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 @Override
@@ -368,6 +446,7 @@ public class OrderActivity extends Activity {
                 hodler.order_txt_time=view.findViewById(R.id.order_txt_time);
                 hodler.order_LV_info=view.findViewById(R.id.order_LV_info);
                 hodler.order_RL_info=view.findViewById(R.id.order_RL_info);
+                hodler.icon_close=view.findViewById(R.id.order_img_close);
                 view.setTag(hodler);
             }else {
                 hodler= (Hodler) view.getTag();
@@ -392,9 +471,11 @@ public class OrderActivity extends Activity {
                 public void onClick(View view) {
                     if (b[0]){
                         hodler.order_LV_info.setVisibility(View.GONE);
+                        hodler.icon_close.setImageResource(R.drawable.next);
                         b[0] =!b[0];
                     }else {
                         hodler.order_LV_info.setVisibility(View.VISIBLE);
+                        hodler.icon_close.setImageResource(R.drawable.close);
                         b[0] =!b[0];
                     }
                 }
@@ -405,6 +486,7 @@ public class OrderActivity extends Activity {
             private TextView order_txt_id,order_txt_price,order_txt_time;
             private RelativeLayout order_RL_info;
             private ListView order_LV_info;
+            private ImageView icon_close;
         }
         public interface MyOnClick1{
             void myClick1(int position, int num, String submit_id, int goods_id);

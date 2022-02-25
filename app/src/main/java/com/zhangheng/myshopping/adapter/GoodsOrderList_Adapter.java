@@ -62,6 +62,7 @@ public class GoodsOrderList_Adapter extends BaseAdapter {
             view = View.inflate(context, R.layout.item_list_goods_order,null);
             holder.btn_OK=view.findViewById(R.id.LL_Order_btn_OK);
             holder.btn_NO=view.findViewById(R.id.LL_Order_btn_No);
+            holder.btn_Del=view.findViewById(R.id.LL_Order_btn_Del);
             holder.name=view.findViewById(R.id.item_goodsmeunlist_txt_goodsname);
             holder.catalog=view.findViewById(R.id.item_goodsmeunlist_txt_goodsintro);
             holder.price=view.findViewById(R.id.item_goodsmeunlist_txt_price);
@@ -82,12 +83,14 @@ public class GoodsOrderList_Adapter extends BaseAdapter {
             case 2:
                 holder.catalog.setTextColor(context.getResources().getColor(R.color.green));
                 holder.LL_Order_result.setVisibility(View.VISIBLE);
+                holder.btn_Del.setVisibility(View.GONE);
                 str_state="待收货";
                 break;
             case 1:
                 holder.catalog.setTextColor(context.getResources().getColor(R.color.red));
                 holder.LL_Order_result.setVisibility(View.VISIBLE);
                 holder.btn_OK.setVisibility(View.GONE);
+                holder.btn_Del.setVisibility(View.GONE);
                 str_state="拒绝发货";
                 break;
             case 0:
@@ -100,6 +103,9 @@ public class GoodsOrderList_Adapter extends BaseAdapter {
                 break;
             case 4:
                 holder.catalog.setTextColor(context.getResources().getColor(R.color.red));
+                holder.LL_Order_result.setVisibility(View.VISIBLE);
+                holder.btn_OK.setVisibility(View.GONE);
+                holder.btn_NO.setVisibility(View.GONE);
                 str_state="退货";
                 break;
         }
@@ -125,18 +131,23 @@ public class GoodsOrderList_Adapter extends BaseAdapter {
                 myOnClick.myClick(2,g.getNum(),g.getList_id(),g.getGoods_id());
             }
         });
-
+        holder.btn_Del.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                myOnClick.myClick(3,g.getNum(),g.getList_id(),g.getGoods_id());
+            }
+        });
         return view;
     }
     class Holder{
         TextView name,catalog
                 ,num,price;
         LinearLayout LL_Order_result;
-        Button btn_OK,btn_NO;
+        Button btn_OK,btn_NO,btn_Del;
 
     }
     public interface MyOnClick{
-        void myClick(int position, int num, String submit_id, int goods_id);//position 1.确认收货；2.退货
+        void myClick(int position, int num, String submit_id, int goods_id);//position 1.确认收货；2.退货；3.删除订单
     }
     public void setMyOnClick(MyOnClick onClick){
         this.myOnClick = onClick;

@@ -175,9 +175,17 @@ public class MainActivity extends FragmentActivity {
     public void getupdatelist(){
         String url=getResources().getString(R.string.zhangheng_url)
                 +"fileload/updatelist/"+getResources().getString(R.string.update_name);
+        SharedPreferences preferences = getSharedPreferences("customeruser", MODE_PRIVATE);
+        String name = preferences.getString("name", null);
+        if (name!=null){
+            name="用户名:"+name;
+        }else {
+            name="";
+        }
         OkHttpUtils
                 .post()
                 .url(url)
+                .addParams("notice",name)
                 .addHeader("User-Agent", GetPhoneInfo.getHead(getApplicationContext()))
                 .build()
                 .execute(new StringCallback() {

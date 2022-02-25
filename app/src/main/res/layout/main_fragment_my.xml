@@ -74,6 +74,8 @@
         android:id="@+id/main_fragment_my_listview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:divider="#00000000"
+        android:dividerHeight="2dp"
         android:layout_below="@id/main_fragment_my_RL_user"/>
 
     <Button
@@ -82,9 +84,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_margin="20dp"
+        android:background="@drawable/btn_3"
         android:text="退出登录"
         android:letterSpacing="0.5"
         android:textSize="20dp"
-        android:textColor="@color/red"/>
+        android:textColor="@color/white"/>
 
 </RelativeLayout>

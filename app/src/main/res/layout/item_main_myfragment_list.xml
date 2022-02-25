@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:background="@color/gray"
+    android:layout_margin="3dp"
     android:layout_height="wrap_content">
 <ImageView
     android:id="@+id/item_m15_myfragment_iv_icon"

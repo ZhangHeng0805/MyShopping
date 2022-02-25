@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
      android:layout_width="match_parent"
-    android:background="#E8FCFD"
+    android:background="#8CD6F0"
     android:orientation="vertical"
+    android:layout_margin="2dp"
     android:layout_height="wrap_content">
-<RelativeLayout
-    android:id="@+id/Rl_up"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/Rl_up"
+        android:layout_width="match_parent"
+        android:padding="5dp"
+        android:layout_height="wrap_content">
+        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -21,25 +23,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingRight="80dp"
+            android:layout_margin="3dp"
             android:orientation="horizontal">
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="商品名称："
-                android:textColor="@color/black" />
+                android:textSize="18sp"
+                android:textColor="@color/black_50" />
 
             <TextView
                 android:id="@+id/item_goodsmeunlist_txt_goodsname"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
+                android:text="商品名称："
                 android:layout_height="wrap_content"
-                android:textColor="@color/yellow" />
+                android:textColor="@color/black" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingRight="80dp"
+            android:layout_margin="3dp"
             android:orientation="horizontal">
 
             <TextView
@@ -47,16 +53,17 @@
                 android:layout_height="wrap_content"
                 android:text="订单状态："
                 android:textColor="@color/black" />
-
             <TextView
                 android:id="@+id/item_goodsmeunlist_txt_goodsintro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="订单状态："
+                android:background="@drawable/bg_white_50"
                 android:textColor="@color/black" />
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
+        <TextView
         android:id="@+id/item_goodsmeunlist_txt_chen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -65,7 +72,7 @@
         android:textSize="18sp"
         android:textColor="@color/black"
         android:text="×"/>
-    <TextView
+        <TextView
         android:id="@+id/item_goodsmeunlist_txt_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -77,7 +84,7 @@
         android:text="￥0元"
         />
 
-    <LinearLayout
+        <LinearLayout
         android:id="@+id/LL_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -86,12 +93,6 @@
         android:layout_alignParentRight="true"
         android:layout_centerInParent="true"
         android:orientation="horizontal">
-
-        <!--<Button
-            android:id="@+id/item_goodsmeunlist_btn_add"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@drawable/btn_add_drawable"/>-->
         <TextView
             android:id="@+id/item_goodsmeunlist_txt_num"
             android:layout_marginLeft="5dp"
@@ -103,11 +104,12 @@
             android:textSize="16sp"/>
 
     </LinearLayout>
-</RelativeLayout>
+    </RelativeLayout>
     <LinearLayout
         android:id="@+id/LL_Order_result"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="8dp"
         android:orientation="horizontal"
         android:gravity="center_vertical">
         <Button
@@ -115,14 +117,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/blue"
+            android:layout_margin="8dp"
+            android:background="@drawable/btn_skm"
+            android:textColor="@color/white"
             android:text="确认收货"/>
         <Button
             android:id="@+id/LL_Order_btn_No"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/red"
-            android:text="退货"/>
+            android:layout_margin="8dp"
+            android:background="@drawable/btn_2"
+            android:textColor="@color/white"
+            android:text="退       货"/>
+        <Button
+            android:id="@+id/LL_Order_btn_Del"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:background="@drawable/btn_3"
+            android:textColor="@color/white"
+            android:text="删除订单"/>
     </LinearLayout>
 </LinearLayout>

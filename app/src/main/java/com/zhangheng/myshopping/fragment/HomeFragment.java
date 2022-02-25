@@ -290,10 +290,11 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                     goodslist.add(goods1);
                 }
                 for (int i=0;i<g.size();i++){
-                    String s=g.get(i).getGoods_name()+" "+g.get(i).getGoods_price()+"元 × "+g.get(i).getNum();
+                    String s=g.get(i).getGoods_name()+" \t "+g.get(i).getGoods_price()+"元 × "+g.get(i).getNum();
                     strings[i]=s;
                 }
-                strings[g.size()+4]="已选商品："+num+"件;总金额："+pice+"元";
+                strings[g.size()]="----------------------------";
+                strings[g.size()+4]="已选商品："+num+"件；总金额："+pice+"元";
                 if (phone!=null) {
                     strings[g.size() + 3] = "联系电话：" + phone;
                 }else {
@@ -309,11 +310,10 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                 }else {
                     strings[g.size()+1] = "收货人：空";
                 }
-                strings[g.size()]="----------------------------";
                 submitGoods.setGoods_list(goodslist);
                 submitGoods.setCount_price(pice);
                 AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
-                builder.setTitle("确认订单");
+                builder.setTitle("确认订单信息");
                 builder.setCancelable(false);
                 builder.setItems(strings, new DialogInterface.OnClickListener() {
                     @Override
@@ -321,7 +321,7 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
 
                     }
                 });
-                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("确定提交", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         getPreferences();
@@ -343,7 +343,7 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                         }
                     }
                 });
-                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("取消提交", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 

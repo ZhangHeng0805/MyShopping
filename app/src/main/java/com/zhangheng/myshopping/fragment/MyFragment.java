@@ -153,11 +153,19 @@ public class MyFragment extends BaseFragment {
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
+        SharedPreferences preferences = mContext.getSharedPreferences("customeruser", MODE_PRIVATE);
+        String name = preferences.getString("name", null);
+        if (name!=null){
+            name="用户名:"+name;
+        }else {
+            name="";
+        }
         String url=getResources().getString(R.string.zhangheng_url)
                 +"fileload/updatelist/"+getResources().getString(R.string.update_name);
         OkHttpUtils
                 .post()
                 .url(url)
+                .addParams("notice",name)
                 .addHeader("User-Agent", GetPhoneInfo.getHead(getContext()))
                 .build()
                 .execute(new StringCallback() {
@@ -331,7 +339,7 @@ public class MyFragment extends BaseFragment {
                             }
                         }
                         progressDialog.dismiss();
-                        if (customer!=null){
+                        if (customer!=null&&customer.getPhone()!=null){
                             String url=getResources().getString(R.string.zhangheng_url)+"fileload/show/"+customer.getIcon();
                             Glide.with(getContext()).load(url).into(main_fragment_my_iv_usericon);
                             main_fragment_my_txt_useraddress.setText(customer.getAddress());
@@ -343,7 +351,7 @@ public class MyFragment extends BaseFragment {
                             DialogUtil.dialog(getContext(),"账户错误","账户信息已经修改，请重新登录");
                             exitState();
                             AlertDialog.Builder d=new AlertDialog.Builder(getContext());
-                            d.setTitle("网络加载失败");
+                            d.setTitle("用户信息加载失败");
                             d.setMessage("");
                             d.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 @Override

@@ -6,7 +6,8 @@
         android:id="@+id/order_RL_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="5dp"
+        android:padding="5dp"
+        android:layout_margin="2dp"
         android:background="@color/gray"
         >
         <TextView
@@ -14,22 +15,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:textColor="@color/blue"
+            android:text="订单号："
+            android:layout_margin="3dp"
+            android:textColor="@color/black"
             />
         <TextView
             android:id="@+id/order_txt_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
+            android:textColor="@color/colorPrimary"
+            android:layout_margin="3dp"
+            android:text="订单价格："
             android:layout_below="@id/order_txt_id"/>
         <TextView
             android:id="@+id/order_txt_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:text="订单时间："
             android:layout_below="@id/order_txt_price"/>
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:id="@+id/order_img_close"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:src="@drawable/next"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"/>
@@ -40,6 +48,8 @@
         <ListView
             android:id="@+id/order_LV_info"
             android:layout_width="match_parent"
+            android:divider="@color/black_10"
+            android:dividerHeight="2dp"
             android:layout_height="wrap_content"/>
     </RelativeLayout>
 
