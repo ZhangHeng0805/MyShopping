@@ -3,28 +3,28 @@
     package="com.zhangheng.myshopping">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.BLUETOOTH "/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS"/>
-    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH " />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/logo"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".fragment.MyActivity.SettingActivity"></activity>
         <activity
             android:name=".ShareLocationActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
@@ -34,30 +34,36 @@
         <activity
             android:name=".WeatherActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
-        <activity android:name=".fragment.MyActivity.OrderActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
-        <activity android:name=".fragment.MyActivity.UserInfoActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
-        <activity android:name=".fragment.MyActivity.Location_Activity"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
+        <activity
+            android:name=".fragment.MyActivity.OrderActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity
+            android:name=".fragment.MyActivity.UserInfoActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity
+            android:name=".fragment.MyActivity.Location_Activity"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="@string/key_gaode" />
-        <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
+            android:value="@string/key_gaode" /> <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
         <service android:name="com.amap.api.location.APSService" />
 
-        <activity android:name=".fragment.MyActivity.Registered_Activity"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
-        <activity android:name=".fragment.MyActivity.Login_Activity"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
+        <activity
+            android:name=".fragment.MyActivity.Registered_Activity"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity
+            android:name=".fragment.MyActivity.Login_Activity"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity android:name=".LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

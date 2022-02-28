@@ -28,6 +28,7 @@ import com.zhangheng.myshopping.adapter.ChatBaseAdapter;
 import com.zhangheng.myshopping.base.BaseFragment;
 import com.zhangheng.myshopping.bean.chat.ChatConfig;
 import com.zhangheng.myshopping.bean.chat.ChatInfo;
+import com.zhangheng.myshopping.setting.ServerSetting;
 import com.zhangheng.myshopping.util.DialogUtil;
 import com.zhangheng.myshopping.util.GetPhoneInfo;
 import com.zhangheng.myshopping.util.OkHttpMessageUtil;
@@ -59,6 +60,7 @@ import okhttp3.Call;
 import static android.content.Context.MODE_PRIVATE;
 
 public class ChatFragment extends BaseFragment {
+    private ServerSetting setting;
     private static final String TAG =ChatFragment.class.getSimpleName() ;
     private TextView main_chatfragment_txt_title;
     private ListView mListView;
@@ -91,6 +93,8 @@ public class ChatFragment extends BaseFragment {
     @Override
     protected View initView() {
         Log.e(TAG,"聊天框架Fragment页面被初始化了");
+        setting=new ServerSetting(getContext());
+
         View view = View.inflate(mContext, R.layout.main_fragment_chat, null);
         mListView=view.findViewById(R.id.main_chatfragment_listview_message);
         main_chatfragment_et_message=view.findViewById(R.id.main_chatfragment_et_message);
@@ -492,13 +496,13 @@ public class ChatFragment extends BaseFragment {
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
-        String url=getResources().getString(R.string.zhangheng_url)+"config/chatconfig";
+        String url=setting.getMainUrl()+"config/chatconfig";
 
         OkHttpUtils
                 .get()
                 .url(url)
                 .addHeader("User-Agent",GetPhoneInfo.getHead(getContext()))
-                .addParams("port",getResources().getString(R.string.chat_local_port))//聊天服务器的本地端口
+                .addParams("port",setting.getChatPort())//聊天服务器的本地端口
                 .build()
                 .execute(new StringCallback() {
                     @Override

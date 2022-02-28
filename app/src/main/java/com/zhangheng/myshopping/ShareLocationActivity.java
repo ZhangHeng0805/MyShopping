@@ -45,6 +45,7 @@ import com.amap.api.services.weather.WeatherSearchQuery;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.zhangheng.myshopping.bean.location.ShareLocation;
+import com.zhangheng.myshopping.setting.ServerSetting;
 import com.zhangheng.myshopping.util.TimeUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -57,6 +58,7 @@ import okhttp3.Call;
 
 public class ShareLocationActivity extends Activity implements View.OnClickListener, GeocodeSearch.OnGeocodeSearchListener, WeatherSearch.OnWeatherSearchListener {
 
+    private ServerSetting setting;
     private GeocodeSearch geocodeSearch;
     private MapView mapView;
     private AMap aMap = null;
@@ -86,6 +88,7 @@ public class ShareLocationActivity extends Activity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sharelocation);
 
+        setting=new ServerSetting(this);
         m12_tv_reportTime=findViewById(R.id.m12_tv_reportTime);
         m12_tv_humidity=findViewById(R.id.m12_tv_humidity);
         m12_tv_wind=findViewById(R.id.m12_tv_wind);
@@ -549,7 +552,7 @@ public class ShareLocationActivity extends Activity implements View.OnClickListe
     //发送共享位置请求
     private void locationList(ShareLocation location){
         List<ShareLocation> list=new ArrayList<>();
-        String url=getResources().getString(R.string.zhangheng_url)+"Customer/share_location";
+        String url=setting.getMainUrl()+"Customer/share_location";
         Gson gson = new Gson();
         String json = gson.toJson(location);
         OkHttpUtils

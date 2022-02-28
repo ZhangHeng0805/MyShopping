@@ -26,6 +26,7 @@ import com.zhangheng.myshopping.fragment.ChatFragment;
 import com.zhangheng.myshopping.fragment.HomeFragment;
 import com.zhangheng.myshopping.fragment.MyFragment;
 import com.zhangheng.myshopping.getphoneMessage.PhoneSystem;
+import com.zhangheng.myshopping.setting.ServerSetting;
 import com.zhangheng.myshopping.util.DialogUtil;
 import com.zhangheng.myshopping.util.GetPhoneInfo;
 import com.zhangheng.myshopping.util.OkHttpMessageUtil;
@@ -39,6 +40,8 @@ import java.util.List;
 import okhttp3.Call;
 
 public class MainActivity extends FragmentActivity {
+
+    private ServerSetting setting;
     private String[] permissions = {
             Manifest.permission.INTERNET,//网络
             Manifest.permission.ACCESS_COARSE_LOCATION,//粗略定位
@@ -64,6 +67,7 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         initView();
         initFragment();//初始化Fragment
+        setting=new ServerSetting(this);
         setListener();
         rg_main.check(R.id.main_rb_home_fragme);
 
@@ -147,7 +151,7 @@ public class MainActivity extends FragmentActivity {
 
     //检查应用更新
     public void getupdatelist(){
-        String url=getResources().getString(R.string.zhangheng_url)
+        String url=setting.getMainUrl()
                 +"fileload/updatelist/"+getResources().getString(R.string.update_name);
         SharedPreferences preferences = getSharedPreferences("customeruser", MODE_PRIVATE);
         String name = preferences.getString("name", null);
@@ -238,7 +242,7 @@ public class MainActivity extends FragmentActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Intent intent=new Intent();
                         intent.setAction(Intent.ACTION_VIEW);
-                        String url = getResources().getString(R.string.zhangheng_url)
+                        String url = setting.getMainUrl()
                                 +"fileload/"+name;
                         intent.setData(Uri.parse(url));
                         startActivity(intent);

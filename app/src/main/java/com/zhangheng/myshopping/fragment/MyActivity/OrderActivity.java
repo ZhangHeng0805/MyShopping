@@ -22,6 +22,7 @@ import com.zhangheng.myshopping.bean.Message;
 import com.zhangheng.myshopping.bean.shopping.Customer;
 import com.zhangheng.myshopping.bean.shopping.submitgoods.SubmitGoods;
 import com.zhangheng.myshopping.bean.shopping.submitgoods.goods;
+import com.zhangheng.myshopping.setting.ServerSetting;
 import com.zhangheng.myshopping.util.DialogUtil;
 import com.zhangheng.myshopping.util.OkHttpMessageUtil;
 import com.zhangheng.myshopping.util.Utility;
@@ -40,6 +41,7 @@ import okhttp3.Call;
 
 public class OrderActivity extends Activity {
 
+    private ServerSetting setting;
     private ImageView order_iv_back,order_iv_help;
     private ListView order_lV_title;
     private SharedPreferences preferences;
@@ -48,7 +50,7 @@ public class OrderActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_myfragment_activity_order);
-
+        setting=new ServerSetting(this);
         order_iv_back=findViewById(R.id.order_iv_back);
         order_lV_title=findViewById(R.id.order_lV_title);
         order_iv_help=findViewById(R.id.order_iv_help);
@@ -89,7 +91,7 @@ public class OrderActivity extends Activity {
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
-        String url=getResources().getString(R.string.zhangheng_url)+"Goods/Insert_Order";
+        String url=setting.getMainUrl()+"Goods/Insert_Order";
         String json = new Gson().toJson(cus);
         OkHttpUtils
                 .post()
@@ -177,7 +179,7 @@ public class OrderActivity extends Activity {
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
-        String url=getResources().getString(R.string.zhangheng_url)+"Goods/OK_Order";
+        String url=setting.getMainUrl()+"Goods/OK_Order";
         Map<String,String> map=new HashMap<>();
         map.put("num", String.valueOf(num));
         map.put("submit_id", submit_id);
@@ -246,7 +248,7 @@ public class OrderActivity extends Activity {
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
-        String url=getResources().getString(R.string.zhangheng_url)+"Goods/NO_Order";
+        String url=setting.getMainUrl()+"Goods/NO_Order";
         Map<String,String> map=new HashMap<>();
         map.put("num", String.valueOf(num));
         map.put("submit_id", submit_id);
@@ -315,7 +317,7 @@ public class OrderActivity extends Activity {
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
-        String url=getResources().getString(R.string.zhangheng_url)+"Goods/Del_Order";
+        String url=setting.getMainUrl()+"Goods/Del_Order";
         Map<String,String> map=new HashMap<>();
         map.put("num", String.valueOf(num));
         map.put("submit_id", submit_id);

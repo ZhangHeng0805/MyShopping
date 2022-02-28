@@ -25,6 +25,7 @@ import com.google.gson.reflect.TypeToken;
 import com.zhangheng.myshopping.R;
 import com.zhangheng.myshopping.bean.Message;
 import com.zhangheng.myshopping.bean.shopping.Customer;
+import com.zhangheng.myshopping.setting.ServerSetting;
 import com.zhangheng.myshopping.util.OkHttpMessageUtil;
 import com.zhangheng.myshopping.util.PhoneNumUtil;
 import com.zhangheng.myshopping.util.TimeUtil;
@@ -48,11 +49,12 @@ public class Registered_Activity extends Activity {
     private List<String> iconlist;
     private Button m15_myfragment_login_btn_submit;
     private String sex="男",icon;
-
+    private ServerSetting setting;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_myfragment_activity_registered);
+        setting=new ServerSetting(this);
         registered_iv_back=findViewById(R.id.registered_iv_back);
         registered_iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,7 +136,7 @@ public class Registered_Activity extends Activity {
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
-        String url=getResources().getString(R.string.zhangheng_url)+"Customer/register";
+        String url=setting.getMainUrl()+"Customer/register";
         Gson gson = new Gson();
         String json = gson.toJson(customer);
         OkHttpUtils
@@ -198,7 +200,7 @@ public class Registered_Activity extends Activity {
     }
     //获取顾客头像集合
     private void getImage(){
-        String url=getResources().getString(R.string.zhangheng_url)+"Customer/customericonlist";
+        String url=setting.getMainUrl()+"Customer/customericonlist";
 
         OkHttpUtils
                 .get()
@@ -239,7 +241,7 @@ public class Registered_Activity extends Activity {
                         List<String> data=new ArrayList<>();
                         if (iconlist!=null) {
                             for (String s : iconlist) {
-                                data.add(getResources().getString(R.string.zhangheng_url) + "fileload/show/" + s);
+                                data.add(setting.getMainUrl() + "fileload/show/" + s);
                             }
                             Log.d(TAG, "onResponse: " + data.size());
                             ImageAdapter imageAdapter = new ImageAdapter(getApplicationContext(), data);

@@ -50,6 +50,7 @@ import com.zhangheng.myshopping.bean.Message;
 import com.zhangheng.myshopping.bean.shopping.Goods;
 import com.zhangheng.myshopping.bean.shopping.submitgoods.SubmitGoods;
 import com.zhangheng.myshopping.bean.shopping.submitgoods.goods;
+import com.zhangheng.myshopping.setting.ServerSetting;
 import com.zhangheng.myshopping.util.DialogUtil;
 import com.zhangheng.myshopping.util.GetPhoneInfo;
 import com.zhangheng.myshopping.util.OkHttpMessageUtil;
@@ -105,11 +106,11 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
     private WeatherSearch mweathersearch;
     private Boolean flag1=true;
     private Boolean flag2=true;
-
+    private ServerSetting setting;
     @Override
     protected View initView() {
-
         Log.e(TAG,"主页框架Fragment页面被初始化了");
+        setting=new ServerSetting(getContext());
         View view = View.inflate(mContext, R.layout.main_fragment_home, null);
         main_fragment_home_spinner=view.findViewById(R.id.main_fragment_home_spinner);
         main_fragment_home_listview=view.findViewById(R.id.main_fragment_home_listview);
@@ -434,7 +435,7 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
-        String url=getResources().getString(R.string.zhangheng_url)+"Goods/allgoodslist";
+        String url=setting.getMainUrl()+"Goods/allgoodslist";
         OkHttpUtils
                 .post()
                 .url(url)
@@ -484,7 +485,7 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                             main_fragment_home_txt_notic.setVisibility(View.GONE);
                             main_fragment_home_listview.setVisibility(View.VISIBLE);
                             for (Goods g : goodsList) {
-                                g.setGoods_image(getResources().getString(R.string.zhangheng_url)
+                                g.setGoods_image(setting.getMainUrl()
                                         + "fileload/show/" + g.getGoods_image());
                                 g.setNum(0);
                                 if (spinner_list.contains(g.getGoods_type())) {
@@ -645,7 +646,7 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
         progressDialog1.setIndeterminate(true);
         progressDialog1.setCancelable(false);
         progressDialog1.show();
-        String url=getResources().getString(R.string.zhangheng_url)+"Goods/submitgoodslist";
+        String url=setting.getMainUrl()+"Goods/submitgoodslist";
         Gson gson = new Gson();
         String json = gson.toJson(submitGoods);
         Map<String,String> map=new HashMap<>();

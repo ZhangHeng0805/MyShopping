@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.zhangheng.myshopping.R;
 import com.zhangheng.myshopping.bean.Message;
 import com.zhangheng.myshopping.bean.shopping.Customer;
+import com.zhangheng.myshopping.setting.ServerSetting;
 import com.zhangheng.myshopping.util.GetPhoneInfo;
 import com.zhangheng.myshopping.util.OkHttpMessageUtil;
 import com.zhangheng.myshopping.util.PhoneNumUtil;
@@ -33,10 +34,12 @@ public class Login_Activity extends Activity {
     private EditText m15_myfragment_login_et_username,m15_myfragment_login_et_password;
     private Button m15_myfragment_login_btn_submit;
     private ImageView login_iv_back;
+    private ServerSetting setting;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_myfragment_activity_login);
+        setting=new ServerSetting(this);
         m15_myfragment_login_btn_submit=findViewById(R.id.m15_myfragment_login_btn_submit);
         m15_myfragment_login_txt_zhuce=findViewById(R.id.m15_myfragment_login_txt_zhuce);
         m15_myfragment_login_et_username=findViewById(R.id.m15_myfragment_login_et_username);
@@ -87,7 +90,7 @@ public class Login_Activity extends Activity {
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
-        String url=getResources().getString(R.string.zhangheng_url)+"Customer/Login";
+        String url=setting.getMainUrl()+"Customer/Login";
         Gson gson = new Gson();
         String json = gson.toJson(customer);
         OkHttpUtils

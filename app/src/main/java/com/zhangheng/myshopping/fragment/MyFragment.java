@@ -31,8 +31,10 @@ import com.zhangheng.myshopping.bean.shopping.Customer;
 import com.zhangheng.myshopping.fragment.MyActivity.Location_Activity;
 import com.zhangheng.myshopping.fragment.MyActivity.Login_Activity;
 import com.zhangheng.myshopping.fragment.MyActivity.OrderActivity;
+import com.zhangheng.myshopping.fragment.MyActivity.SettingActivity;
 import com.zhangheng.myshopping.fragment.MyActivity.UserInfoActivity;
 import com.zhangheng.myshopping.getphoneMessage.PhoneSystem;
+import com.zhangheng.myshopping.setting.ServerSetting;
 import com.zhangheng.myshopping.util.DialogUtil;
 import com.zhangheng.myshopping.util.GetPhoneInfo;
 import com.zhangheng.myshopping.util.OkHttpMessageUtil;
@@ -48,21 +50,24 @@ public class MyFragment extends BaseFragment {
     private RelativeLayout main_fragment_my_RL_user;
     private static final String TAG= MyFragment.class.getSimpleName();
     private TextView main_fragment_my_txt_username,main_fragment_my_txt_useraddress,main_fragment_my_txt_phone;
-    private ImageView main_fragment_my_iv_usericon;
+    private ImageView main_fragment_my_iv_usericon,main_fragment_my_iv_setting;
     private SharedPreferences preferences;
     private String phone,name,password,address,versionCode;
     private Button main_fragment_my_btn_exit;
     private ListView main_fragment_my_listview;
+    private ServerSetting setting;
 
     @Override
     protected View initView() {
         Log.e(TAG,"我的框架Fragment页面被初始化了");
+        setting=new ServerSetting(getContext());
         View view = View.inflate(mContext, R.layout.main_fragment_my, null);
         main_fragment_my_RL_user=view.findViewById(R.id.main_fragment_my_RL_user);
         main_fragment_my_txt_username=view.findViewById(R.id.main_fragment_my_txt_username);
         main_fragment_my_txt_phone=view.findViewById(R.id.main_fragment_my_txt_phone);
         main_fragment_my_txt_useraddress=view.findViewById(R.id.main_fragment_my_txt_useraddress);
         main_fragment_my_iv_usericon=view.findViewById(R.id.main_fragment_my_iv_usericon);
+        main_fragment_my_iv_setting=view.findViewById(R.id.main_fragment_my_iv_setting);
         main_fragment_my_btn_exit=view.findViewById(R.id.main_fragment_my_btn_exit);
         main_fragment_my_listview=view.findViewById(R.id.main_fragment_my_listview);
         Listener();
@@ -99,7 +104,7 @@ public class MyFragment extends BaseFragment {
                         }
                         break;
                     case 1:
-                        String html=getResources().getString(R.string.zhangheng_url)+"regist_merchantsPage";
+                        String html=setting.getMainUrl()+"regist_merchantsPage";
                         Intent intent=new Intent();
                         intent.setAction(Intent.ACTION_VIEW);
                         intent.setData(Uri.parse(html));
@@ -146,6 +151,13 @@ public class MyFragment extends BaseFragment {
                 clearPreferences();
             }
         });
+        main_fragment_my_iv_setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), SettingActivity.class);
+                startActivity(intent);
+            }
+        });
     }
     //检查更新
     public void getupdatelist(){
@@ -161,7 +173,7 @@ public class MyFragment extends BaseFragment {
         }else {
             name="";
         }
-        String url=getResources().getString(R.string.zhangheng_url)
+        String url=setting.getMainUrl()
                 +"fileload/updatelist/"+getResources().getString(R.string.update_name);
         OkHttpUtils
                 .post()
@@ -251,7 +263,7 @@ public class MyFragment extends BaseFragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Intent intent=new Intent();
                         intent.setAction(Intent.ACTION_VIEW);
-                        String url = getResources().getString(R.string.zhangheng_url)
+                        String url = setting.getMainUrl()
                                 +"fileload/"+name;
                         intent.setData(Uri.parse(url));
                         startActivity(intent);
@@ -297,7 +309,7 @@ public class MyFragment extends BaseFragment {
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
-        String url=getResources().getString(R.string.zhangheng_url)+"Customer/getCustomer";
+        String url=setting.getMainUrl()+"Customer/getCustomer";
         String json=new Gson().toJson(customer);
         OkHttpUtils
                 .post()
@@ -341,7 +353,7 @@ public class MyFragment extends BaseFragment {
                         }
                         progressDialog.dismiss();
                         if (customer!=null&&customer.getPhone()!=null){
-                            String url=getResources().getString(R.string.zhangheng_url)+"fileload/show/"+customer.getIcon();
+                            String url=setting.getMainUrl()+"fileload/show/"+customer.getIcon();
                             Glide.with(getContext()).load(url).into(main_fragment_my_iv_usericon);
                             main_fragment_my_txt_useraddress.setText(customer.getAddress());
                             SharedPreferences sharedPreferences=getContext().getSharedPreferences("customeruser",MODE_PRIVATE);

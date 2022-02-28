@@ -39,6 +39,7 @@ import com.google.gson.Gson;
 import com.zhangheng.myshopping.R;
 import com.zhangheng.myshopping.bean.Message;
 import com.zhangheng.myshopping.bean.shopping.Customer;
+import com.zhangheng.myshopping.setting.ServerSetting;
 import com.zhangheng.myshopping.util.DialogUtil;
 import com.zhangheng.myshopping.util.OkHttpMessageUtil;
 import com.zhangheng.zh.Resuilt;
@@ -53,6 +54,7 @@ import okhttp3.Call;
 
 public class Location_Activity extends Activity implements GeocodeSearch.OnGeocodeSearchListener {
 
+    private ServerSetting setting;
     private static final String TAG= Location_Activity.class.getSimpleName();
     private ImageView location_iv_back;
     private MapView mapView;
@@ -83,6 +85,7 @@ public class Location_Activity extends Activity implements GeocodeSearch.OnGeoco
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_myfragment_activity_location);
+        setting=new ServerSetting(this);
         mapView=findViewById(R.id.m15_myfragment_location_map);
         location_iv_back=findViewById(R.id.fragment_my_location_iv_back);
         m15_myfragment_location_txt_locaton=findViewById(R.id.m15_myfragment_location_txt_locaton);
@@ -179,7 +182,7 @@ public class Location_Activity extends Activity implements GeocodeSearch.OnGeoco
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
-        String url=getResources().getString(R.string.zhangheng_url)+"Customer/setAddress";
+        String url=setting.getMainUrl()+"Customer/setAddress";
         Gson gson = new Gson();
         String json = gson.toJson(customer);
         OkHttpUtils
