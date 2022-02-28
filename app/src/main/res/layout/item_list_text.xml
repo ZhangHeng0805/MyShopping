@@ -2,11 +2,11 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textStyle="bold"
-    android:gravity="center_vertical"
+    android:gravity="center"
     android:textSize="18sp"
-    android:textColor="@color/black"
-    android:background="@color/blue"
+    android:text="商品类型"
+    android:textColor="@color/white_80"
+    android:background="@drawable/bg_blue"
     android:padding="15dp">
 
 </TextView>

@@ -57,12 +57,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_margin="3dp"
+                android:background="@drawable/btn_3"
+                android:textColor="@color/white"
                 android:text="获取位置"
                 />
             <Button
                 android:id="@+id/m15_myfragment_location_btn_save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="3dp"
+                android:background="@drawable/btn_1"
+                android:textColor="@color/white_80"
                 android:layout_weight="1"
                 android:text="提交保存"
                 />
@@ -86,16 +92,21 @@
             android:id="@+id/m15_myfragment_location_txt_locaton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="18sp"
+            android:background="@drawable/bg_black_10"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:layout_margin="3dp"
             />
 
         <TextView
             android:id="@+id/m15_myfragment_location_txt_locatoninfo"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
-            android:textSize="18sp"
+            android:layout_margin="3dp"
+            android:textSize="16sp"
+            android:text="点击[获取位置]可获取当前位置信息，地址填写完成后点击[提交保存]即可完成位置设置"
+            android:background="@drawable/bg_black_10"
             />
     </LinearLayout>
 </RelativeLayout>

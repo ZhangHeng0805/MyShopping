@@ -164,38 +164,22 @@ public class ShareLocationActivity extends Activity implements View.OnClickListe
                     case R.id.m12_rb_01:
                         //标准样式
                         aMap.setMapType(AMap.MAP_TYPE_NORMAL);
-                        m12_LL_mapstyle.setBackgroundColor(getResources().getColor(R.color.black_10));
-                        m12_btn_locationtype.setBackgroundColor(getResources().getColor(R.color.black_10));
-                        m12_btn_downloadmap.setBackgroundColor(getResources().getColor(R.color.black_10));
-                        m12_btn_mapstyle.setBackgroundColor(getResources().getColor(R.color.black_10));
-                        m12_btn_refresh.setBackgroundColor(getResources().getColor(R.color.black_10));
+                        setbg_black_10();
                         break;
                     case R.id.m12_rb_02:
                         //夜间样式
                         aMap.setMapType(AMap.MAP_TYPE_NIGHT);
-                        m12_LL_mapstyle.setBackgroundColor(getResources().getColor(R.color.white_50));
-                        m12_btn_locationtype.setBackgroundColor(getResources().getColor(R.color.white_50));
-                        m12_btn_downloadmap.setBackgroundColor(getResources().getColor(R.color.white_50));
-                        m12_btn_mapstyle.setBackgroundColor(getResources().getColor(R.color.white_50));
-                        m12_btn_refresh.setBackgroundColor(getResources().getColor(R.color.white_50));
+                        setbg_white_50();
                         break;
                     case R.id.m12_rb_03:
                         //卫星样式
                         aMap.setMapType(AMap.MAP_TYPE_SATELLITE);
-                        m12_LL_mapstyle.setBackgroundColor(getResources().getColor(R.color.white_50));
-                        m12_btn_locationtype.setBackgroundColor(getResources().getColor(R.color.white_50));
-                        m12_btn_downloadmap.setBackgroundColor(getResources().getColor(R.color.white_50));
-                        m12_btn_mapstyle.setBackgroundColor(getResources().getColor(R.color.white_50));
-                        m12_btn_refresh.setBackgroundColor(getResources().getColor(R.color.white_50));
+                        setbg_white_50();;
                         break;
                     case R.id.m12_rb_04:
                         //导航样式
                         aMap.setMapType(AMap.MAP_TYPE_NAVI);
-                        m12_LL_mapstyle.setBackgroundColor(getResources().getColor(R.color.black_10));
-                        m12_btn_locationtype.setBackgroundColor(getResources().getColor(R.color.black_10));
-                        m12_btn_downloadmap.setBackgroundColor(getResources().getColor(R.color.black_10));
-                        m12_btn_mapstyle.setBackgroundColor(getResources().getColor(R.color.black_10));
-                        m12_btn_refresh.setBackgroundColor(getResources().getColor(R.color.black_10));
+                        setbg_black_10();
                         break;
                 }
             }
@@ -241,6 +225,20 @@ public class ShareLocationActivity extends Activity implements View.OnClickListe
         closeView();
     }
 
+    public void setbg_white_50(){
+        m12_LL_mapstyle.setBackground(getDrawable(R.drawable.bg_white_50));
+        m12_btn_locationtype.setBackground(getDrawable(R.drawable.bg_white_50));
+        m12_btn_downloadmap.setBackground(getDrawable(R.drawable.bg_white_50));
+        m12_btn_mapstyle.setBackground(getDrawable(R.drawable.bg_white_50));
+        m12_btn_refresh.setBackground(getDrawable(R.drawable.bg_white_50));
+    }
+    public void setbg_black_10(){
+        m12_LL_mapstyle.setBackground(getDrawable(R.drawable.bg_black_10));
+        m12_btn_locationtype.setBackground(getDrawable(R.drawable.bg_black_10));
+        m12_btn_downloadmap.setBackground(getDrawable(R.drawable.bg_black_10));
+        m12_btn_mapstyle.setBackground(getDrawable(R.drawable.bg_black_10));
+        m12_btn_refresh.setBackground(getDrawable(R.drawable.bg_black_10));
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -361,7 +359,7 @@ public class ShareLocationActivity extends Activity implements View.OnClickListe
                     m12_btn_locationtype.setText("关闭方式");
                     m12_btn_locationtype.setTextColor(getColor(R.color.colorAccent));
                     m12_LL_locationtype.setVisibility(View.VISIBLE);
-                    m12_LL_locationtype.setBackgroundColor(getColor(R.color.white));
+                    m12_LL_locationtype.setBackground(getDrawable(R.drawable.bg_blue));
                 }else {
                     closeView();
                 }
@@ -624,7 +622,7 @@ public class ShareLocationActivity extends Activity implements View.OnClickListe
                 String reportTime = liveResult.getReportTime()+"发布";//发布时间
                 String temperature = liveResult.getTemperature()+"℃";//温度"°"
                 String weather = liveResult.getWeather();//天气
-                String wind=liveResult.getWindDirection()+"风    "+liveResult.getWindPower()+"级";
+                String wind=liveResult.getWindDirection()+"风（"+liveResult.getWindPower()+"级）";
                 String humidity = "湿度："+liveResult.getHumidity()+"%";
                 m12_tv_city.setText(city);
                 m12_tv_reportTime.setText(reportTime);

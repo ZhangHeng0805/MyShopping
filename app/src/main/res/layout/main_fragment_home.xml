@@ -20,25 +20,39 @@
             <LinearLayout
                 android:id="@+id/main_fragment_home_LL_weather"
                 android:layout_width="wrap_content"
+                android:background="@drawable/bg_black_10"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginRight="8dp"
-                android:paddingLeft="15dp"
-                android:gravity="center_vertical">
-                <TextView
-                    android:id="@+id/main_fragment_home_txt_city"
+                android:layout_marginLeft="15dp"
+                android:gravity="center">
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="18sp"
-                    android:textColor="@color/white"
-                    />
+                    android:gravity="center">
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/location"/>
+                    <TextView
+                        android:id="@+id/main_fragment_home_txt_city"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="城市"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        />
+                </LinearLayout>
                 <TextView
                     android:id="@+id/main_fragment_home_txt_temp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@color/white"/>
+                    android:textStyle="italic"
+                    android:text="天气"
+                    android:textColor="@color/white_80"/>
             </LinearLayout>
             <ImageView
                 android:id="@+id/main_fragment_home_iv_icon"
@@ -58,6 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
+            android:layout_centerHorizontal="true"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
 <com.zhangheng.myshopping.view.RefreshListView
@@ -142,7 +157,7 @@
         android:layout_height="200dp"
         android:layout_above="@+id/main_LL_meun"
         android:orientation="vertical"
-        android:background="@color/white"
+        android:background="@drawable/bg_black_10"
         android:clickable="true"
         >
         <LinearLayout

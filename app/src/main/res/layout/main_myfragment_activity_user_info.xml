@@ -34,12 +34,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="1dp"
-        android:background="@color/gray">
+        android:background="@drawable/bg_black_10">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="用户头像："
+            android:text="用户头像"
             android:textSize="20dp"
             android:textColor="@color/black"
             android:layout_marginLeft="15dp"/>
@@ -48,7 +48,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textColor="@color/red"
+            android:background="@drawable/btn1"
+            android:textColor="@color/white_80"
             android:text="修改头像"/>
         <Spinner
             android:padding="5dp"
@@ -65,12 +66,12 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="1dp"
-        android:background="@color/gray">
+        android:background="@drawable/bg_black_10">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="用户名："
+            android:text="用户名"
             android:textSize="20dp"
             android:textColor="@color/black"
             android:layout_marginLeft="15dp"/>
@@ -96,12 +97,12 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="1dp"
-        android:background="@color/gray">
+        android:background="@drawable/bg_black_10">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="修改密码："
+            android:text="修改密码"
             android:textSize="20dp"
             android:textColor="@color/black"
             android:layout_marginLeft="15dp"/>
@@ -117,12 +118,12 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="1dp"
-        android:background="@color/gray">
+        android:background="@drawable/bg_black_10">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="注册时间："
+            android:text="注册时间"
             android:textSize="20dp"
             android:textColor="@color/black"
             android:layout_marginLeft="15dp"/>

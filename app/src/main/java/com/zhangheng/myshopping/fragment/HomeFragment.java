@@ -252,14 +252,30 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
         main_fragment_home_listview_meun.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Goods goods = g.get(i);
-                int i1 = goodsList.indexOf(goods);
+                final Goods goods = g.get(i);
+                final int i1 = goodsList.indexOf(goods);
+                Log.d("商品菜单选中：",i1+"/"+goodsList.size());
                 if (i1>=0){
+                    //商品位置是否在底部
                     if (i1==goodsList.size()-1) {
-                        main_fragment_home_listview.setSelection(i1+1);
+                        main_fragment_home_listview.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                main_fragment_home_listview.smoothScrollToPosition(main_fragment_home_listview.getBottom());
+                                main_fragment_home_listview.onRefreshComplete();
+                            }
+                        });
                     }else {
-                        main_fragment_home_listview.setSelection(i1+1);
+                        main_fragment_home_listview.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                main_fragment_home_listview.smoothScrollToPosition(i1+1);
+                                main_fragment_home_listview.onRefreshComplete();
+                            }
+
+                        });
                     }
+
                 }
             }
         });
@@ -268,7 +284,22 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onClick: 清空购物车");
-                clear_meun();
+                AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+                builder.setTitle("确定清空购物车");
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        clear_meun();
+                    }
+                });
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                builder.show();
+
             }
         });
         //提交订单按钮的点击监听
@@ -318,7 +349,6 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                 builder.setItems(strings, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
                     }
                 });
                 builder.setPositiveButton("确定提交", new DialogInterface.OnClickListener() {
@@ -352,7 +382,7 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                 builder.show();
             }
         });
-        //购物车清单开关点击监听
+        //购物车列表展开关点击监听
         main_fragment_home_cb_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -746,13 +776,13 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                 String reportTime = liveResult.getReportTime()+"发布";//发布时间
                 String temperature = liveResult.getTemperature()+"℃";//温度"°"
                 String weather = liveResult.getWeather();//天气
-                String wind=liveResult.getWindDirection()+"风    "+liveResult.getWindPower()+"级";
+                String wind=liveResult.getWindDirection()+"风("+liveResult.getWindPower()+"级)";
                 String humidity = "湿度："+liveResult.getHumidity()+"%";
                 String adCode = liveResult.getWeather();
                 Log.e(TAG, "onWeatherLiveSearched: "+city);
 
                 weather_address=city;
-                main_fragment_home_txt_temp.setText(weather+"\t"+temperature);
+                main_fragment_home_txt_temp.setText(weather+" "+temperature);
             }
         }else {
             if (i==1200){

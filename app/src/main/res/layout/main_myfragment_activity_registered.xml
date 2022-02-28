@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="#CAF3FD"
     android:layout_height="match_parent"
     tools:context=".fragment.MyActivity.Registered_Activity">
     <RelativeLayout
@@ -216,8 +217,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:background="@drawable/btn_1"
             android:layout_marginRight="50dp"
             android:layout_marginLeft="50dp"
+            android:textColor="@color/white_80"
             android:text="注         册"
             android:textSize="25sp"
             android:layout_marginTop="50dp"/>

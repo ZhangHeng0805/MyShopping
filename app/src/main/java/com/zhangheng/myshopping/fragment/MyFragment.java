@@ -47,7 +47,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class MyFragment extends BaseFragment {
     private RelativeLayout main_fragment_my_RL_user;
     private static final String TAG= MyFragment.class.getSimpleName();
-    private TextView main_fragment_my_txt_username,main_fragment_my_txt_useraddress;
+    private TextView main_fragment_my_txt_username,main_fragment_my_txt_useraddress,main_fragment_my_txt_phone;
     private ImageView main_fragment_my_iv_usericon;
     private SharedPreferences preferences;
     private String phone,name,password,address,versionCode;
@@ -60,6 +60,7 @@ public class MyFragment extends BaseFragment {
         View view = View.inflate(mContext, R.layout.main_fragment_my, null);
         main_fragment_my_RL_user=view.findViewById(R.id.main_fragment_my_RL_user);
         main_fragment_my_txt_username=view.findViewById(R.id.main_fragment_my_txt_username);
+        main_fragment_my_txt_phone=view.findViewById(R.id.main_fragment_my_txt_phone);
         main_fragment_my_txt_useraddress=view.findViewById(R.id.main_fragment_my_txt_useraddress);
         main_fragment_my_iv_usericon=view.findViewById(R.id.main_fragment_my_iv_usericon);
         main_fragment_my_btn_exit=view.findViewById(R.id.main_fragment_my_btn_exit);
@@ -380,6 +381,10 @@ public class MyFragment extends BaseFragment {
             customer.setPassword(password);
             getCustomer(customer);
             main_fragment_my_txt_username.setText(name);
+            StringBuffer p=new StringBuffer(phone);
+            p=p.replace(3,7,"****");
+            main_fragment_my_txt_phone.setText(p);
+
             main_fragment_my_txt_useraddress.setText(address);
         }else {
             main_fragment_my_btn_exit.setVisibility(View.GONE);
@@ -434,6 +439,7 @@ public class MyFragment extends BaseFragment {
         main_fragment_my_iv_usericon.setImageResource(R.drawable.icon);
         main_fragment_my_txt_username.setText("暂无用户，点击登录");
         main_fragment_my_txt_useraddress.setText("暂无地址");
+        main_fragment_my_txt_phone.setText("***");
     }
 
     //设置列表的适配器
@@ -455,7 +461,7 @@ public class MyFragment extends BaseFragment {
                 R.drawable.location,
                 R.drawable.zhuce,
                 R.drawable.order,
-                R.drawable.find,
+                R.drawable.telephone,
                 R.drawable.find,
         };
 

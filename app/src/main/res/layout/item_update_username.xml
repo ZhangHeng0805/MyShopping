@@ -9,10 +9,10 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#169ee5"
+        android:background="@color/colorPrimary"
         android:gravity="center"
         android:padding="10dp"
-        android:text="修改密码"
+        android:text="修改用户名"
         android:textColor="@android:color/white"
         android:textSize="20sp" />
     <LinearLayout
@@ -22,35 +22,12 @@
         android:layout_height="wrap_content">
         <EditText
             android:layout_marginTop="10dp"
-            android:id="@+id/et_old_password"
+            android:id="@+id/et_new_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:digits="@string/password_style"
-            android:hint="请输入你的旧密码："
+            android:inputType="text"
+            android:hint="请输入你的用户名："
             android:textSize="18sp" />
-        <EditText
-            android:id="@+id/et_new_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:digits="@string/password_style"
-            android:hint="请输入你的6~18位的新密码："
-            android:textSize="18sp" />
-        <EditText
-            android:id="@+id/et_new_password1"
-            android:inputType="textPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:digits="@string/password_style"
-            android:hint="请再次输入新密码:"
-            android:textSize="18sp" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="注意：密码输入只允许输入数字,英文字母和@.-_#*符号"
-            android:layout_marginBottom="10dp"
-            />
     </LinearLayout>
 
 
@@ -63,23 +40,23 @@
         android:paddingRight="5dp">
 
         <Button
-            android:id="@+id/btn_cancel"
+            android:id="@+id/btn_update_username_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:background="#75757C"
-            android:text="取消"
+            android:text="取 消"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
 
         <Button
-            android:id="@+id/btn_login"
+            android:id="@+id/btn_update_username_submint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="#169ee5"
-            android:text="修改"
+            android:background="@color/colorPrimaryDark"
+            android:text="修 改"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
     </LinearLayout>

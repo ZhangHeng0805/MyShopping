@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.zhangheng.myshopping.R;
 import com.zhangheng.myshopping.bean.Message;
 import com.zhangheng.myshopping.bean.shopping.Customer;
+import com.zhangheng.myshopping.util.GetPhoneInfo;
 import com.zhangheng.myshopping.util.OkHttpMessageUtil;
 import com.zhangheng.myshopping.util.PhoneNumUtil;
 import com.zhangheng.zh.ASCII;
@@ -92,6 +93,7 @@ public class Login_Activity extends Activity {
         OkHttpUtils
                 .post()
                 .url(url)
+                .addHeader("User-Agent", GetPhoneInfo.getHead(getApplicationContext()))
                 .addParams("CustomerLogin",json)
                 .build()
                 .execute(new StringCallback() {

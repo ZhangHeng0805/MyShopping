@@ -41,8 +41,9 @@ public class GetPhoneInfo {
         return versionCode;
     }
 
-    public static String phoneNum(Context context) {//获取本机手机号码（有可能获取不到）
+    public static String phoneNum(Context context){//获取本机手机号码（有可能获取不到）
         String getPhone = null;
+        PhoneInfoUtils phoneInfoUtils = new PhoneInfoUtils(context);
         TelephonyManager phoneManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(context,Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED
@@ -55,14 +56,21 @@ public class GetPhoneInfo {
             // to handle the case where the user grants the permission. See the documentation
             // for Activity#requestPermissions for more details.
         }
-        if (phoneManager.getLine1Number() == null) {
-            getPhone="phonenum=null";
-        } else if (phoneManager.getLine1Number().startsWith("+86")) {
-            getPhone = phoneManager.getLine1Number().replace("+86", "");
-        } else {
-            getPhone = phoneManager.getLine1Number();//得到电话号码
+        String line1Number=null;
+        try {
+            line1Number = phoneManager.getLine1Number();
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        PhoneInfoUtils phoneInfoUtils = new PhoneInfoUtils(context);
+
+        if (line1Number == null) {
+            getPhone=null;
+        } else if (line1Number.startsWith("+86")) {
+            getPhone = line1Number.replace("+86", "");
+        } else {
+            getPhone = line1Number;//得到电话号码
+        }
+
         String providersName = phoneInfoUtils.getProvidersName();
         String nativePhoneNumber = phoneInfoUtils.getNativePhoneNumber();
         SharedPreferences preferences = context.getSharedPreferences("customeruser", MODE_PRIVATE);
@@ -74,7 +82,11 @@ public class GetPhoneInfo {
             //如果获取本机手机号失败，则获取登录用户的手机号
             nativePhoneNumber = preferences.getString("phone", null);
         }
-        getPhone = "[" + providersName + "]" + nativePhoneNumber;
+        if (getPhone!=null){
+            getPhone = "[" + providersName + "]" + getPhone;
+        }else {
+            getPhone = "[" + providersName + "]" + nativePhoneNumber;
+        }
 
         return getPhone;
     }

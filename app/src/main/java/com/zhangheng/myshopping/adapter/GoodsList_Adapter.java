@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.zhangheng.myshopping.R;
 import com.zhangheng.myshopping.bean.shopping.Goods;
 
@@ -78,7 +80,12 @@ public class GoodsList_Adapter extends BaseAdapter {
         }
         //加载图片
         String imgurl = d.getGoods_image();
-        Glide.with(context).load(imgurl).into(holder.item_booklist_image);
+//        Glide.with(context).load(imgurl).into(holder.item_booklist_image);
+        RequestOptions options = new RequestOptions().error(R.drawable.icon).bitmapTransform(new RoundedCorners(50));//图片圆角为30
+        Glide.with(context).load(imgurl) //图片地址
+                .apply(options)
+                .into(holder.item_booklist_image);
+
         //商品
         String title=d.getGoods_name();
         holder.item_booklist_title.setText(title);

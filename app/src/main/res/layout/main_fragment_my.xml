@@ -24,20 +24,19 @@
         android:orientation="horizontal"
         android:layout_below="@id/main_fragment_my_titlebar"
         android:layout_marginTop="10dp"
-        android:background="@color/gray"
+        android:background="@drawable/bg_my_rl_user"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:layout_marginBottom="10dp">
         <ImageView
             android:id="@+id/main_fragment_my_iv_usericon"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="20dp"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
             android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="15dp"
             android:src="@drawable/icon"
             android:background="@color/transparent"/>
-
         <LinearLayout
             android:id="@+id/main_fragment_my_LL_userinfo"
             android:layout_width="wrap_content"
@@ -50,9 +49,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:textSize="20dp"
+                android:textStyle="bold"
+                android:textSize="22dp"
+                android:layout_margin="3dp"
                 android:layout_weight="1"
                 android:text="暂无用户，点击登录"/>
+            <TextView
+                android:id="@+id/main_fragment_my_txt_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/bg_1"
+                android:textSize="14dp"
+                android:textStyle="italic"
+                android:layout_margin="3dp"
+                android:background="@drawable/bg_white_50"
+                android:layout_weight="1"
+                android:text="***"/>
             <TextView
                 android:id="@+id/main_fragment_my_txt_useraddress"
                 android:layout_width="wrap_content"
@@ -60,6 +72,8 @@
                 android:layout_weight="1"
                 android:paddingRight="35sp"
                 android:textSize="12dp"
+                android:layout_margin="3dp"
+                android:textColor="@color/blue"
                 android:text="暂无地址"/>
         </LinearLayout>
         <ImageView

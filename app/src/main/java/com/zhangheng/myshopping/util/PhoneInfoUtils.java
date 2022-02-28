@@ -42,7 +42,7 @@ public class PhoneInfoUtils {
 
     //获取电话号码
     public String getNativePhoneNumber() {
-        String nativePhoneNumber = "N/A";
+        String nativePhoneNumber = null;
         if (checkSelfPermission(context,Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED
                 && checkSelfPermission(context,Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED
                 && checkSelfPermission(context,Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
@@ -54,7 +54,12 @@ public class PhoneInfoUtils {
             // to handle the case where the user grants the permission. See the documentation
             // for Activity#requestPermissions for more details.
         }
-        nativePhoneNumber = telephonyManager.getLine1Number();
+        try {
+            nativePhoneNumber = telephonyManager.getLine1Number();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         return nativePhoneNumber;
     }
 

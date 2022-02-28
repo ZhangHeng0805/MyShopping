@@ -86,39 +86,50 @@ public class UserInfoActivity extends Activity {
         userinfo_RL_userusername.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final AlertDialog.Builder alert = new AlertDialog.Builder(UserInfoActivity.this);
-                alert.setTitle("修改用户名");
-                alert.setMessage("请输入新的用户名:");
-                alert.setCancelable(false);
-                final EditText input = new EditText(UserInfoActivity.this);
-                input.setHint("请输入新的用户名：");
-                alert.setView(input);
-                alert.setPositiveButton("修改", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        String value = input.getText().toString();
-                        if (value.length()>0&&value.length()<=10) {
-                            if (!value.equals(name)) {
-                                Log.d("修改用户名", "onClick: " + value);
-                                Customer customer = new Customer();
-                                customer.setPhone(phone);
-                                customer.setPassword(password);
-                                customer.setUsername(value);
-                                setUserName(customer);//修改用户名
-                            }else {
-                                dialog("用户名相同","新的用户名不能和旧的用户名相同");
-                            }
-                        }else {
-                            dialog("输入限制","用户名不能为空，且长度限制在10字符内");
-                        }
-                    }
-                });
-                alert.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                if (name!=null) {
+                    final AlertDialog.Builder alert = new AlertDialog.Builder(UserInfoActivity.this);
+                    final AlertDialog dialog = alert.create();
+                    View dialogView = View.inflate(UserInfoActivity.this, R.layout.item_update_username, null);
+                    dialog.setView(dialogView);
+                    dialog.show();
 
-                    public void onClick(DialogInterface dialog, int which) {
-                        // TODO Auto-generated method stub
-                    }
-                });
-                alert.show();
+                    final EditText et_new_username = dialogView.findViewById(R.id.et_new_username);
+                    et_new_username.setText(name);
+
+                    final Button btn_submit = dialogView.findViewById(R.id.btn_update_username_submint);
+                    final Button btn_cancel = dialogView.findViewById(R.id.btn_update_username_cancel);
+
+                    btn_submit.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String value = et_new_username.getText().toString();
+                            if (value.length() > 0 && value.length() <= 10) {
+                                if (!value.equals(name)) {
+                                    Log.d("修改用户名", "onClick: " + value);
+                                    Customer customer = new Customer();
+                                    customer.setPhone(phone);
+                                    customer.setPassword(password);
+                                    customer.setUsername(value);
+                                    setUserName(customer);//修改用户名
+                                    dialog.dismiss();
+                                } else {
+                                    DialogUtil.dialog(UserInfoActivity.this,"用户名相同", "新的用户名不能和旧的用户名相同");
+                                }
+                            } else {
+                                DialogUtil.dialog(UserInfoActivity.this,"输入限制", "用户名不能为空，且长度限制在10字符内");
+                            }
+                        }
+                    });
+
+                    btn_cancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dialog.dismiss();
+                        }
+                    });
+                }else {
+                    DialogUtil.dialog(UserInfoActivity.this,"没有登录","请登录后再来操作");
+                }
             }
         });
         //头像选择
@@ -171,6 +182,7 @@ public class UserInfoActivity extends Activity {
                 alert.show();
             }
         });
+        //修改密码
         userinfo_RL_password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

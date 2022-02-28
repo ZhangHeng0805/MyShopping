@@ -3,7 +3,6 @@ package com.zhangheng.myshopping;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,7 +11,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -59,7 +57,7 @@ public class MainActivity extends FragmentActivity {
     private int position=0;   //选中的fragment对应的位置
     private Fragment mContext;     //上次切换的Fragment
     private static final String TAG =MainActivity.class.getSimpleName() ;
-    private String getPhone,model,sdk,release,versionCode;
+    private String versionCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,30 +67,6 @@ public class MainActivity extends FragmentActivity {
         setListener();
         rg_main.check(R.id.main_rb_home_fragme);
 
-        model = android.os.Build.MODEL; // 手机型号
-        sdk = android.os.Build.VERSION.SDK; // SDK号
-        release = "Android" + android.os.Build.VERSION.RELEASE; // android系统版本号
-        String s = model + "\t" + sdk + "\t" + release;
-        //获取自己手机号码
-        TelephonyManager phoneManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-
-        if (checkSelfPermission(Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    Activity#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for Activity#requestPermissions for more details.
-            return;
-        }
-        if (phoneManager.getLine1Number()==null){
-
-        } else if (phoneManager.getLine1Number().startsWith("+86")){
-            getPhone=phoneManager.getLine1Number().replace("+86","");
-        }else {
-            getPhone = phoneManager.getLine1Number();//得到电话号码
-        }
         versionCode= PhoneSystem.getVersionCode(this);
         getupdatelist();
     }
