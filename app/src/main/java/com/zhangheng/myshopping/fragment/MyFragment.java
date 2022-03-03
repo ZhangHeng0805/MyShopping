@@ -211,7 +211,7 @@ public class MyFragment extends BaseFragment {
                                             if (!versionCode.equals(appversion(msg.getMessage()))) {
                                                 showUpdate(msg.getMessage());
                                             }else {
-                                                DialogUtil.dialog(getContext(),"当前应用已经是最新版本了","最新版本："+msg.getMessage());
+                                                DialogUtil.dialog(getContext(),"当前应用已经是最新版本了","最新版本："+msg.getMessage().substring(urlname.indexOf("_")+1,urlname.lastIndexOf(".")));
                                             }
                                         } else {
                                             Log.d("忽略更新", "urlname与更新地址一致");

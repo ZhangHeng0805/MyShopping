@@ -24,10 +24,10 @@ public class DialogUtil {
         dialog.show();
         TextView tit=dialogView.findViewById(R.id.tv_dialog_title);
         TextView msg=dialogView.findViewById(R.id.tv_dialog_msg);
-        if (title==null){
+        if (title==null||title.replace(" ","").length()<=0){
             tit.setVisibility(View.GONE);
         }
-        if (message==null){
+        if (message==null||message.replace(" ","").length()<=0){
             msg.setVisibility(View.GONE);
         }
         tit.setText(title);

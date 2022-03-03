@@ -9,20 +9,26 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.zhangheng.myshopping.setting.ServerSetting;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class LauncherActivity extends Activity {
     private Button launcher_btn_exit;
+    private ServerSetting setting;
     private int i=4;//倒计时为i-1秒
-    private TextView launcher_txt_title;
+    private TextView launcher_txt_title,launcher_server;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
+        setting=new ServerSetting(this);
         launcher_btn_exit=findViewById(R.id.launcher_btn_exit);
         launcher_txt_title=findViewById(R.id.launcher_txt_title);
+        launcher_server=findViewById(R.id.launcher_server);
+        launcher_server.setText(setting.getMainUrl());
 //        launcher_txt_title.setTypeface(FontType.getFont(getApplicationContext(),"assets/fonts/cat.ttf"));
         countDown();
     }

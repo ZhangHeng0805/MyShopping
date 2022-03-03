@@ -194,7 +194,7 @@ public class MainActivity extends FragmentActivity {
                                         sharedPreferences = getSharedPreferences("乐购update", MODE_PRIVATE);
                                         String urlname = sharedPreferences.getString("urlname", "");
                                         if (!urlname.equals(msg.getMessage())) {
-                                            //如果版本不一致则提示更细
+                                            //如果版本不一致则提示更新
                                             if (!versionCode.equals(appversion(msg.getMessage()))){
                                                 showUpdate(msg.getMessage());
                                             }
