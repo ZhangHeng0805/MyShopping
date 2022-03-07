@@ -19,6 +19,7 @@ import com.zhangheng.myshopping.R;
 import com.zhangheng.myshopping.bean.Message;
 import com.zhangheng.myshopping.bean.shopping.Customer;
 import com.zhangheng.myshopping.setting.ServerSetting;
+import com.zhangheng.myshopping.util.EncryptUtil;
 import com.zhangheng.myshopping.util.GetPhoneInfo;
 import com.zhangheng.myshopping.util.OkHttpMessageUtil;
 import com.zhangheng.myshopping.util.PhoneNumUtil;
@@ -34,6 +35,7 @@ public class Login_Activity extends Activity {
     private EditText m15_myfragment_login_et_username,m15_myfragment_login_et_password;
     private Button m15_myfragment_login_btn_submit;
     private ImageView login_iv_back;
+    private String password;
     private ServerSetting setting;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +64,13 @@ public class Login_Activity extends Activity {
             @Override
             public void onClick(View view) {
                 String phone=m15_myfragment_login_et_username.getText().toString();
-                String password=m15_myfragment_login_et_password.getText().toString();
+                password=m15_myfragment_login_et_password.getText().toString();
                 if (PhoneNumUtil.isMobile(phone)){
                     if (PhoneNumUtil.isMobile(phone)) {
                         if (password.length() >= 6 && password.length() <= 18) {
                             Customer customer = new Customer();
                             customer.setPhone(phone);
-                            customer.setPassword(password);
+                            customer.setPassword(EncryptUtil.getMyMd5(password));
 //                            Log.d(TAG, "onClick: " + user.toString());
                             submit(customer);
                         } else {
@@ -127,7 +129,7 @@ public class Login_Activity extends Activity {
                                 SharedPreferences.Editor editor=sharedPreferences.edit();
                                 editor.putString("phone",customer.getPhone());
                                 editor.putString("name",msg.getMessage());
-                                ASCII ascii = new ASCII(customer.getPassword(), 3);//将密码加密
+                                ASCII ascii = new ASCII(password, 3);//将密码加密存储到本地
                                 editor.putString("password",ascii.getresuilt());
                                 editor.commit();
                                 finish();

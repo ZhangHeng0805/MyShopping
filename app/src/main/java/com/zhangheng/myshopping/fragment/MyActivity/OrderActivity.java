@@ -24,6 +24,7 @@ import com.zhangheng.myshopping.bean.shopping.submitgoods.SubmitGoods;
 import com.zhangheng.myshopping.bean.shopping.submitgoods.goods;
 import com.zhangheng.myshopping.setting.ServerSetting;
 import com.zhangheng.myshopping.util.DialogUtil;
+import com.zhangheng.myshopping.util.EncryptUtil;
 import com.zhangheng.myshopping.util.OkHttpMessageUtil;
 import com.zhangheng.myshopping.util.Utility;
 import com.zhangheng.zh.Resuilt;
@@ -130,7 +131,7 @@ public class OrderActivity extends Activity {
                                     switch (position){
                                         case 1://确认收货
                                             if (phone!=null) {
-                                                getOKOrder(num,submit_id,goods_id,phone,password);
+                                                getOKOrder(num,submit_id,goods_id,phone, EncryptUtil.getMyMd5(password));
 
                                             }else {
                                                 DialogUtil.dialog(OrderActivity.this,"账号为空","账户的电话号码为空");
@@ -138,14 +139,14 @@ public class OrderActivity extends Activity {
                                             break;
                                         case 2://退货
                                             if (phone!=null) {
-                                                getNoOrder(num,submit_id,goods_id,phone,password);
+                                                getNoOrder(num,submit_id,goods_id,phone,EncryptUtil.getMyMd5(password));
                                             }else {
                                                 DialogUtil.dialog(OrderActivity.this,"账号为空","账户的电话号码为空");
                                             }
                                             break;
                                         case 3://删除
                                             if (phone!=null) {
-                                                getDelOrder(num,submit_id,goods_id,phone,password);
+                                                getDelOrder(num,submit_id,goods_id,phone,EncryptUtil.getMyMd5(password));
                                             }else {
                                                 DialogUtil.dialog(OrderActivity.this,"账号为空","账户的电话号码为空");
                                             }

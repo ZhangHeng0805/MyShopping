@@ -30,6 +30,7 @@ import com.zhangheng.myshopping.bean.Message;
 import com.zhangheng.myshopping.bean.shopping.Customer;
 import com.zhangheng.myshopping.setting.ServerSetting;
 import com.zhangheng.myshopping.util.DialogUtil;
+import com.zhangheng.myshopping.util.EncryptUtil;
 import com.zhangheng.myshopping.util.OkHttpMessageUtil;
 import com.zhangheng.myshopping.util.TimeUtil;
 import com.zhangheng.zh.ASCII;
@@ -49,7 +50,7 @@ public class UserInfoActivity extends Activity {
     private Customer customer;
     private Spinner userinfo_sp_usericon;
     private TextView userinfo_txt_username,userinfo_txt_time;
-    private String icon,phone,password,address,name;
+    private String icon,phone,password,address,name,new_pwd;
     private SharedPreferences preferences;
     private ImageView login_iv_back;
     private RelativeLayout userinfo_RL_password,userinfo_RL_userusername;
@@ -110,7 +111,7 @@ public class UserInfoActivity extends Activity {
                                     Log.d("修改用户名", "onClick: " + value);
                                     Customer customer = new Customer();
                                     customer.setPhone(phone);
-                                    customer.setPassword(password);
+                                    customer.setPassword(EncryptUtil.getMyMd5(password));
                                     customer.setUsername(value);
                                     setUserName(customer);//修改用户名
                                     dialog.dismiss();
@@ -169,7 +170,7 @@ public class UserInfoActivity extends Activity {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         Customer customer = new Customer();
                         customer.setPhone(phone);
-                        customer.setPassword(password);
+                        customer.setPassword(EncryptUtil.getMyMd5(password));
                         customer.setIcon(icon);
                         setIcon(customer);//修改头像
                     }
@@ -207,7 +208,7 @@ public class UserInfoActivity extends Activity {
                         @Override
                         public void onClick(View view) {
                             String old_pwd = et_old_pwd.getText().toString();
-                            String new_pwd = et_new_pwd.getText().toString();
+                            new_pwd = et_new_pwd.getText().toString();
                             String new_pwd1 = et_new_pwd1.getText().toString();
                             if (TextUtils.isEmpty(old_pwd) || TextUtils.isEmpty(new_pwd)||TextUtils.isEmpty(new_pwd1)) {
                                 Toast.makeText(UserInfoActivity.this, "输入框不能为空!", Toast.LENGTH_SHORT).show();
@@ -218,7 +219,7 @@ public class UserInfoActivity extends Activity {
                                             if (old_pwd.equals(password)) {
                                                 Customer customer = new Customer();
                                                 customer.setPhone(phone);
-                                                customer.setPassword(new_pwd);//设置新密码
+                                                customer.setPassword(EncryptUtil.getMyMd5(new_pwd));//设置新密码
                                                 customer.setUsername(name);
                                                 setPassword(customer);
                                                 dialog.dismiss();
@@ -412,7 +413,7 @@ public class UserInfoActivity extends Activity {
                         if (iconlist!=null) {
                             Customer customer = new Customer();
                             customer.setPhone(phone);
-                            customer.setPassword(password);
+                            customer.setPassword(EncryptUtil.getMyMd5(password));
                             getUser(customer);
                             for (String s : iconlist) {
                                 data.add(setting.getMainUrl() + "fileload/show/" + s);
@@ -651,13 +652,23 @@ public class UserInfoActivity extends Activity {
                         progressDialog.dismiss();
                         if (msg!=null){
                             if (msg.getCode()==200){
-                                dialog("密码修改成功","请牢记新的密码！");
+                                android.app.AlertDialog.Builder d=new android.app.AlertDialog.Builder(UserInfoActivity.this);
+                                d.setTitle("密码修改成功");
+                                d.setCancelable(false);
+                                d.setMessage("请牢记新的密码！可能需要重新登录！");
+                                d.setNegativeButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        finish();
+                                    }
+                                });
+                                d.show();
                                 SharedPreferences sharedPreferences=getSharedPreferences("customeruser", MODE_PRIVATE);
                                 SharedPreferences.Editor editor=sharedPreferences.edit();
-                                ASCII ascii = new ASCII(msg.getMessage(), 3);
+                                ASCII ascii = new ASCII(new_pwd, 3);
                                 editor.putString("password",ascii.getresuilt());
                                 editor.commit();
-                                getPreferences();
+
                             }else {
                                 dialog(msg.getTitle(),msg.getMessage());
                             }

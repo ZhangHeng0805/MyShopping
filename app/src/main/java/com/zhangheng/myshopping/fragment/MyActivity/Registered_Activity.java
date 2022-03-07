@@ -26,6 +26,7 @@ import com.zhangheng.myshopping.R;
 import com.zhangheng.myshopping.bean.Message;
 import com.zhangheng.myshopping.bean.shopping.Customer;
 import com.zhangheng.myshopping.setting.ServerSetting;
+import com.zhangheng.myshopping.util.EncryptUtil;
 import com.zhangheng.myshopping.util.OkHttpMessageUtil;
 import com.zhangheng.myshopping.util.PhoneNumUtil;
 import com.zhangheng.myshopping.util.TimeUtil;
@@ -99,7 +100,7 @@ public class Registered_Activity extends Activity {
                                     Customer customer = new Customer();
                                     customer.setPhone(phone);
                                     customer.setUsername(username);
-                                    customer.setPassword(password);
+                                    customer.setPassword(EncryptUtil.getMyMd5(password));//使用自制的Md5加密
                                     customer.setSex(sex);
                                     customer.setIcon(icon);
                                     customer.setTime(TimeUtil.getSystemTime(new Date()));

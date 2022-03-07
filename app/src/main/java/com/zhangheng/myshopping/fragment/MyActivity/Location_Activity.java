@@ -41,6 +41,7 @@ import com.zhangheng.myshopping.bean.Message;
 import com.zhangheng.myshopping.bean.shopping.Customer;
 import com.zhangheng.myshopping.setting.ServerSetting;
 import com.zhangheng.myshopping.util.DialogUtil;
+import com.zhangheng.myshopping.util.EncryptUtil;
 import com.zhangheng.myshopping.util.OkHttpMessageUtil;
 import com.zhangheng.zh.Resuilt;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -117,7 +118,7 @@ public class Location_Activity extends Activity implements GeocodeSearch.OnGeoco
                     if (address.length()>3){
                         Customer customer = new Customer();
                         customer.setPhone(phone);
-                        customer.setPassword(password);
+                        customer.setPassword(EncryptUtil.getMyMd5(password));
                         customer.setAddress(address);
                         myOkHttp(customer);
                     }else {
@@ -176,6 +177,7 @@ public class Location_Activity extends Activity implements GeocodeSearch.OnGeoco
             }
         });
     }
+    //设置位置
     private void myOkHttp(final Customer customer){
         final ProgressDialog progressDialog=new ProgressDialog(Location_Activity.this);
         progressDialog.setMessage("提交保存中。。。");

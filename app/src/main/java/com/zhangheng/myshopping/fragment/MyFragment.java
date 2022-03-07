@@ -36,6 +36,7 @@ import com.zhangheng.myshopping.fragment.MyActivity.UserInfoActivity;
 import com.zhangheng.myshopping.getphoneMessage.PhoneSystem;
 import com.zhangheng.myshopping.setting.ServerSetting;
 import com.zhangheng.myshopping.util.DialogUtil;
+import com.zhangheng.myshopping.util.EncryptUtil;
 import com.zhangheng.myshopping.util.GetPhoneInfo;
 import com.zhangheng.myshopping.util.OkHttpMessageUtil;
 import com.zhangheng.zh.Resuilt;
@@ -390,7 +391,7 @@ public class MyFragment extends BaseFragment {
             main_fragment_my_btn_exit.setVisibility(View.VISIBLE);
             Customer customer = new Customer();
             customer.setPhone(phone);
-            customer.setPassword(password);
+            customer.setPassword(EncryptUtil.getMyMd5(password));
             getCustomer(customer);
             main_fragment_my_txt_username.setText(name);
             StringBuffer p=new StringBuffer(phone);
