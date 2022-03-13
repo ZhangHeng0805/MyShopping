@@ -2,20 +2,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/main_fragment_home_titlebar"
-        android:orientation="horizontal" android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:gravity="center_vertical"
         android:layout_alignParentTop="true"
         android:background="@color/blue">
         <com.amap.api.maps.MapView
             android:id="@+id/main_fragment_home_amp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
+            android:layout_weight="1"
             android:orientation="horizontal">
             <LinearLayout
                 android:id="@+id/main_fragment_home_LL_weather"
@@ -23,8 +27,8 @@
                 android:background="@drawable/bg_black_10"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginRight="8dp"
-                android:layout_marginLeft="15dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
                 android:gravity="center">
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -40,7 +44,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="城市"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="@color/white"
                         />
@@ -54,27 +58,27 @@
                     android:text="天气"
                     android:textColor="@color/white_80"/>
             </LinearLayout>
-            <ImageView
-                android:id="@+id/main_fragment_home_iv_icon"
-                android:layout_width="30dp"
-                android:layout_height="30sp"/>
         </LinearLayout>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="购物"
-            android:layout_centerInParent="true"
-            android:textSize="20sp"
-            android:textColor="@color/white"/>
+
         <Spinner
             android:id="@+id/main_fragment_home_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentRight="true"/>
-    </RelativeLayout>
+            android:layout_weight="2" />
+        <EditText
+            android:id="@+id/main_fragment_home_et_search"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="15sp"
+            android:layout_weight="7"
+            android:hint="商品名/店铺名"
+            />
+        <ImageView
+            android:id="@+id/main_fragment_home_iv_search"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/search" />
+    </LinearLayout>
 <com.zhangheng.myshopping.view.RefreshListView
     android:id="@+id/main_fragment_home_listview"
     android:layout_width="match_parent"
@@ -89,7 +93,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/red"
+        android:layout_margin="8dp"
+        android:background="@drawable/bg_black_10"
         android:layout_centerInParent="true"
+        android:gravity="center"
         android:textSize="25dp"
         android:text="加载失败,点击重试"/>
 

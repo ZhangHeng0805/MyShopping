@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,6 +17,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -90,13 +93,14 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
     private double pice=0;//已选商品的总金额
     private static final String TAG=HomeFragment.class.getSimpleName();
     private SharedPreferences preferences;
-    private String phone,name,password,address,submit_id,weather_address;
+    private String phone,name,password,address,submit_id,weather_address,search_name="";
     private int spinner_position ;//下拉列表的选择位置
     private List<String> spinner_list = new ArrayList<String>();//下拉列表
     private List<Goods> goodsList;//所有的商品集合
     private List<Goods> g=new ArrayList<>();//购物车的商品集合
     private TextView main_fragment_home_txt_city,main_fragment_home_txt_temp;
-    private ImageView main_fragment_home_iv_icon;
+    private ImageView main_fragment_home_iv_search;
+    private EditText main_fragment_home_et_search;
     private GeocodeSearch geocodeSearch;
     private AMap aMap = null;
     private MapView mapView;
@@ -122,10 +126,12 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
         main_fragment_home_btn_submit=view.findViewById(R.id.main_fragment_home_btn_submit);
         main_fragment_home_listview_meun=view.findViewById(R.id.main_fragment_home_listview_meun);
         main_fragment_home_cb_switch=view.findViewById(R.id.main_fragment_home_cb_switch);
-        main_fragment_home_iv_icon=view.findViewById(R.id.main_fragment_home_iv_icon);
         main_fragment_home_txt_city=view.findViewById(R.id.main_fragment_home_txt_city);
         main_fragment_home_txt_temp=view.findViewById(R.id.main_fragment_home_txt_temp);
         main_fragment_home_LL_weather=view.findViewById(R.id.main_fragment_home_LL_weather);
+        main_fragment_home_iv_search=view.findViewById(R.id.main_fragment_home_iv_search);
+        main_fragment_home_et_search=view.findViewById(R.id.main_fragment_home_et_search);
+
         mapView=view.findViewById(R.id.main_fragment_home_amp);
         mapView.setVisibility(View.GONE);
         Listener();
@@ -167,8 +173,7 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
     protected void initData() {
         super.initData();
         start();
-        getOkHttp("全部");
-        //初始化地图控制器对象
+        getOkHttp("全部",search_name);
 
     }
 
@@ -210,7 +215,7 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                     d.setPositiveButton("刷新", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            getOkHttp(spinner_list.get(spinner_position));
+                            getOkHttp(spinner_list.get(spinner_position),search_name);
                             close_meun();
                             clear_meun();
                             main_fragment_home_listview.onRefreshComplete();
@@ -224,7 +229,7 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                     });
                     d.show();
                 }else {
-                    getOkHttp(spinner_list.get(spinner_position));
+                    getOkHttp(spinner_list.get(spinner_position),search_name);
                     main_fragment_home_listview.onRefreshComplete();
                     close_meun();
                     clear_meun();
@@ -235,14 +240,14 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
             public void onLoadMore() {
             }
         });
-        //加载失败文字点击监听
+        //提示文字点击监听
         main_fragment_home_txt_notic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (spinner_list.size()>0){
-                    getOkHttp(spinner_list.get(spinner_position));
+                    getOkHttp(spinner_list.get(spinner_position),search_name);
                 }else {
-                    getOkHttp("全部");
+                    getOkHttp("全部",search_name);
                 }
             }
         });
@@ -411,6 +416,35 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                 }
             }
         });
+        /**
+         * 搜索商品输入框输入监听
+         */
+        main_fragment_home_et_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                search_name=editable.toString().trim();
+            }
+        });
+        /**
+         * 商品搜索图标的点击事件
+         */
+        main_fragment_home_iv_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                refresh_GoodList(spinner_position,"确定搜索商品？","注意：搜索商品会清除当前购物车里的商品！");
+
+            }
+        });
 
     }
     //获取存储在手机里面的账户信息
@@ -429,7 +463,7 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
     /*
     * 获取商品列表
     * */
-    private void getOkHttp(String type){
+    private void getOkHttp(String type,String name){
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("加载中。。。");
         progressDialog.setIndeterminate(true);
@@ -440,6 +474,7 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                 .post()
                 .url(url)
                 .addParams("GoodsType",type)
+                .addParams("Name",name)
                 .addHeader("User-Agent", GetPhoneInfo.getHead(getContext()))
                 .build()
                 .execute(new StringCallback() {
@@ -449,7 +484,8 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                         progressDialog.dismiss();
                         final AlertDialog.Builder d=new AlertDialog.Builder(getContext());
                         d.setTitle("加载失败");
-                        d.setMessage(OkHttpMessageUtil.error(e));
+                        String error = OkHttpMessageUtil.error(e);
+                        d.setMessage(error);
                         d.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -463,7 +499,7 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                         });
                         d.show();
                         main_fragment_home_listview.setVisibility(View.GONE);
-                        main_fragment_home_txt_notic.setVisibility(View.VISIBLE);
+                        setNotice(error+"\n商品列表加载失败，点击重试",500);
                     }
                     @Override
                     public void onResponse(String response, int id) {
@@ -482,74 +518,79 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                         }
 
                         if (goodsList!=null) {
-                            main_fragment_home_txt_notic.setVisibility(View.GONE);
-                            main_fragment_home_listview.setVisibility(View.VISIBLE);
-                            for (Goods g : goodsList) {
-                                g.setGoods_image(setting.getMainUrl()
-                                        + "fileload/show/" + g.getGoods_image());
-                                g.setNum(0);
-                                if (spinner_list.contains(g.getGoods_type())) {
-                                } else {
-                                    spinner_list.add(g.getGoods_type());
+                            if (goodsList.size()>0) {
+                                main_fragment_home_txt_notic.setVisibility(View.GONE);
+                                main_fragment_home_listview.setVisibility(View.VISIBLE);
+                                for (Goods g : goodsList) {
+                                    g.setGoods_image(setting.getMainUrl()
+                                            + "fileload/show/" + g.getGoods_image());
+                                    g.setNum(0);
+                                    if (spinner_list.contains(g.getGoods_type())) {
+                                    } else {
+                                        spinner_list.add(g.getGoods_type());
+                                    }
                                 }
-                            }
 
-                            final BaseAdapter adapter = new GoodsList_Adapter(mContext, goodsList);
-                            main_fragment_home_listview.setAdapter(adapter);
-                            Toast.makeText(getContext(),"商品数量："+goodsList.size(),Toast.LENGTH_SHORT).show();
-                            ((GoodsList_Adapter) adapter).setMyOnClickNum(new GoodsList_Adapter.MyOnClickNum() {
-                                @Override
-                                public void myNumClick(int position, int operation) {
-                                    switch (operation) {
-                                        case 1:
-                                            num += 1;
-                                            double p1 = goodsList.get(position).getGoods_price();
-                                            pice += p1;
-                                            int indexAdd = g.indexOf(goodsList.get(position));
-                                            if (indexAdd >= 0) {
-                                                g.get(indexAdd).setNum(g.get(indexAdd).getNum());
-                                                GoodsMeunList_Adapter goodsMeunList_adapter = new GoodsMeunList_Adapter(getContext(), g);
-                                                main_fragment_home_listview_meun.setAdapter(goodsMeunList_adapter);
-                                            } else {
-                                                g.add(goodsList.get(position));
-                                                GoodsMeunList_Adapter goodsMeunList_adapter = new GoodsMeunList_Adapter(getContext(), g);
-                                                main_fragment_home_listview_meun.setAdapter(goodsMeunList_adapter);
-                                            }
-                                            open_meun();
-                                            break;
-                                        case 2:
-                                            if (num > 0) {
-                                                num -= 1;
-                                                double p2 = goodsList.get(position).getGoods_price();
-                                                pice -= p2;
-                                                int indexSub = g.indexOf(goodsList.get(position));
-                                                if (indexSub >= 0) {
-                                                    if (g.get(indexSub).getNum() > 0) {
-                                                        g.get(indexSub).setNum(g.get(indexSub).getNum());
-                                                        GoodsMeunList_Adapter goodsMeunList_adapter = new GoodsMeunList_Adapter(getContext(), g);
-                                                        main_fragment_home_listview_meun.setAdapter(goodsMeunList_adapter);
-                                                    } else {
-                                                        g.remove(indexSub);
-                                                        GoodsMeunList_Adapter goodsMeunList_adapter = new GoodsMeunList_Adapter(getContext(), g);
-                                                        main_fragment_home_listview_meun.setAdapter(goodsMeunList_adapter);
+                                final BaseAdapter adapter = new GoodsList_Adapter(mContext, goodsList);
+                                main_fragment_home_listview.setAdapter(adapter);
+                                Toast.makeText(getContext(), "商品数量：" + goodsList.size(), Toast.LENGTH_SHORT).show();
+                                ((GoodsList_Adapter) adapter).setMyOnClickNum(new GoodsList_Adapter.MyOnClickNum() {
+                                    @Override
+                                    public void myNumClick(int position, int operation) {
+                                        switch (operation) {
+                                            case 1:
+                                                num += 1;
+                                                double p1 = goodsList.get(position).getGoods_price();
+                                                pice += p1;
+                                                int indexAdd = g.indexOf(goodsList.get(position));
+                                                if (indexAdd >= 0) {
+                                                    g.get(indexAdd).setNum(g.get(indexAdd).getNum());
+                                                    GoodsMeunList_Adapter goodsMeunList_adapter = new GoodsMeunList_Adapter(getContext(), g);
+                                                    main_fragment_home_listview_meun.setAdapter(goodsMeunList_adapter);
+                                                } else {
+                                                    g.add(goodsList.get(position));
+                                                    GoodsMeunList_Adapter goodsMeunList_adapter = new GoodsMeunList_Adapter(getContext(), g);
+                                                    main_fragment_home_listview_meun.setAdapter(goodsMeunList_adapter);
+                                                }
+                                                open_meun();
+                                                break;
+                                            case 2:
+                                                if (num > 0) {
+                                                    num -= 1;
+                                                    double p2 = goodsList.get(position).getGoods_price();
+                                                    pice -= p2;
+                                                    int indexSub = g.indexOf(goodsList.get(position));
+                                                    if (indexSub >= 0) {
+                                                        if (g.get(indexSub).getNum() > 0) {
+                                                            g.get(indexSub).setNum(g.get(indexSub).getNum());
+                                                            GoodsMeunList_Adapter goodsMeunList_adapter = new GoodsMeunList_Adapter(getContext(), g);
+                                                            main_fragment_home_listview_meun.setAdapter(goodsMeunList_adapter);
+                                                        } else {
+                                                            g.remove(indexSub);
+                                                            GoodsMeunList_Adapter goodsMeunList_adapter = new GoodsMeunList_Adapter(getContext(), g);
+                                                            main_fragment_home_listview_meun.setAdapter(goodsMeunList_adapter);
+                                                        }
                                                     }
                                                 }
-                                            }
-                                            break;
-                                    }
-                                    if (num == 0) {
-                                        close_meun();
-                                    }
-                                    main_fragment_home_txt_num.setText(String.valueOf(num) + "件");
-                                    BigDecimal bg = new BigDecimal(pice);
-                                    pice = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-                                    main_fragment_home_txt_pice.setText(String.valueOf(pice) + "元");
+                                                break;
+                                        }
+                                        if (num == 0) {
+                                            close_meun();
+                                        }
+                                        main_fragment_home_txt_num.setText(String.valueOf(num) + "件");
+                                        BigDecimal bg = new BigDecimal(pice);
+                                        pice = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                                        main_fragment_home_txt_pice.setText(String.valueOf(pice) + "元");
 
-                                }
-                            });
+                                    }
+                                });
+                            }else {
+                                main_fragment_home_listview.setVisibility(View.GONE);
+                                setNotice("(＞人＜；)对不起\n没有找到商品，请重试",404);
+                            }
                         }else {
                             main_fragment_home_listview.setVisibility(View.GONE);
-                            main_fragment_home_txt_notic.setVisibility(View.VISIBLE);
+                            setNotice("查找商品出错了，点击重试",404);
                         }
                         if (spinner_list.size()>0){
                             main_fragment_home_spinner.setVisibility(View.VISIBLE);
@@ -562,7 +603,7 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                                     String s = spinner_list.get(i);
 //                                    List<Goods> glist=new ArrayList<>();
                                     if (spinner_position!=i) {//防止重复刷新
-                                        refresh_GoodList(i);
+                                        refresh_GoodList(i,"确定切换商品列表？","请注意，切换商品列表会清空当前购物车");
                                         Log.d(TAG, "onItemSelected: "+s);
                                         spinner_position=i;
                                     }
@@ -613,15 +654,15 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
         g.clear();
     }
     //刷新商品列表
-    private void refresh_GoodList(int i){
+    private void refresh_GoodList(int i,String title,String msg){
         if (g.size()>0){
             AlertDialog.Builder d=new AlertDialog.Builder(getContext());
-            d.setTitle("是否切换商品列表？");
-            d.setMessage("请注意，切换商品列表会清空当前购物车");
-            d.setPositiveButton("切换", new DialogInterface.OnClickListener() {
+            d.setTitle(title);
+            d.setMessage(msg);
+            d.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    getOkHttp(spinner_list.get(spinner_position));
+                    getOkHttp(spinner_list.get(spinner_position),search_name);
                     close_meun();
                     clear_meun();
                 }
@@ -634,7 +675,7 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
             });
             d.show();
         }else {
-            getOkHttp(spinner_list.get(i));
+            getOkHttp(spinner_list.get(i),search_name);
             close_meun();
             clear_meun();
         }
@@ -692,7 +733,7 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         clear_meun();
-                                        getOkHttp(spinner_list.get(spinner_position));
+                                        getOkHttp(spinner_list.get(spinner_position),search_name);
                                     }
                                 });
                                 d.show();
@@ -806,4 +847,24 @@ public class HomeFragment extends BaseFragment implements  GeocodeSearch.OnGeoco
     public void onWeatherForecastSearched(LocalWeatherForecastResult localWeatherForecastResult, int i) {
 
     }
+
+    private void setNotice(String msg,int state){
+        main_fragment_home_txt_notic.setText(msg);
+        switch (state){
+            case 200:
+                main_fragment_home_txt_notic.setTextColor(getResources().getColor(R.color.skyblue));
+                break;
+            case 404:
+                main_fragment_home_txt_notic.setTextColor(getResources().getColor(R.color.yellow));
+                break;
+            case 500:
+                main_fragment_home_txt_notic.setTextColor(getResources().getColor(R.color.red));
+                break;
+                default:
+                    main_fragment_home_txt_notic.setTextColor(getResources().getColor(R.color.black_80));
+                    break;
+        }
+        main_fragment_home_txt_notic.setVisibility(View.VISIBLE);
+    }
+
 }

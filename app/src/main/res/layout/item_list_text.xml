@@ -3,10 +3,9 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:textSize="18sp"
+    android:textSize="12sp"
     android:text="商品类型"
     android:textColor="@color/white_80"
-    android:background="@drawable/bg_blue"
-    android:padding="15dp">
+    android:background="@drawable/bg_blue">
 
 </TextView>
