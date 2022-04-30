@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
@@ -46,6 +47,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.zhangheng.myshopping.bean.location.ShareLocation;
 import com.zhangheng.myshopping.setting.ServerSetting;
+import com.zhangheng.myshopping.util.PhoneNumUtil;
 import com.zhangheng.myshopping.util.TimeUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -383,6 +385,9 @@ public class ShareLocationActivity extends Activity implements View.OnClickListe
                     aMap.clear();
                 }
                 String time=TimeUtil.getSystemTime(new Date());
+                if (!PhoneNumUtil.isMobile(phone) ||username==null){
+                    getPreferences();
+                }
                 location1.setPhone(phone);
                 location1.setUsername(username);
                 location1.setLatitude(String.valueOf(latitude));
@@ -392,6 +397,12 @@ public class ShareLocationActivity extends Activity implements View.OnClickListe
                 locationList(location1);
             }
         }
+    }
+    //获取存储在手机里面的账户信息
+    private void getPreferences(){
+        SharedPreferences preferences = this.getSharedPreferences("customeruser", MODE_PRIVATE);
+        phone = preferences.getString("phone", null);
+        username=preferences.getString("name",null);
     }
     private void exitMap(){
         ShareLocation location1=new ShareLocation();
