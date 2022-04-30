@@ -1,6 +1,6 @@
 # MyShopping
 * 乐在购物Android应用[软件下载](https://github.com/ZhangHeng0805/happy_shopping/releases/download/V3.01/_V2-3.01.apk)
-## 本项目的服务器[File-Management-Server](https://github.com/ZhangHeng0805/File-Management-Server)
+## 本项目的服务器[happy_shopping](https://github.com/ZhangHeng0805/happy_shopping)
 * 注意：本项目中的资源文件```string.xml```因为涉及秘钥，所以我就没有上传
 # 项目介绍
 ## 一、需求分析
