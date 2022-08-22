@@ -1,7 +1,7 @@
 # MyShopping
 * 乐在购物Android应用[软件下载](https://github.com/ZhangHeng0805/happy_shopping/releases/download/V3.01/_V2-3.01.apk)
 ## 本项目的服务器[happy_shopping](https://github.com/ZhangHeng0805/happy_shopping)
-* 注意：本项目中的资源文件```string.xml```因为涉及秘钥，所以我就没有上传
+* 注意：本项目中的资源文件```res/values/string.xml```因为涉及秘钥，所以我就没有上传
 # 项目介绍
 ## 一、需求分析
 随着网络的快速发展，网上购物商城以其方便、快捷的特点受到了更多用户的青睐。对比传统的商场销售，网上商城可以将商品详细分类，为用户提供了更多的选择空间;通过前台商品的展示，可以使顾客更好地了解商城的商品;并且自己也可以注册为商家，将自己的商品进行出售，网络购物车的实现使顾客真正实现了足不出户、网上购物的目的。
